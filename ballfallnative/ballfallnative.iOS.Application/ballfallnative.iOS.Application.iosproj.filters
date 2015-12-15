@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ballfallnative.iOS">
+      <UniqueIdentifier>{768457fa-7cb2-4155-9b08-62ec41dbb2a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ballfallnative.iOS\Supporting Files">
+      <UniqueIdentifier>{ccfd3b6c-0704-45e9-8714-01cca8bc2075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images.xcassets">
+      <UniqueIdentifier>{ec7d8ce4-5993-4a79-b8e0-7ba53111276c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Products">
+      <UniqueIdentifier>{f8168f9d-5d2d-400b-8279-34fda6a65d6d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ballfallnative.iOS\AppDelegate.h">
+      <Filter>ballfallnative.iOS</Filter>
+    </ClInclude>
+    <ClInclude Include="ballfallnative.iOS\GameViewController.h">
+      <Filter>ballfallnative.iOS</Filter>
+    </ClInclude>
+    <Content Include="ballfallnative.iOS\Base.lproj\Main.storyboard">
+      <Filter>ballfallnative.iOS</Filter>
+    </Content>
+    <Content Include="ballfallnative.iOS\Images.xcassets\AppIcon.appiconset\Contents.json">
+      <Filter>Images.xcassets</Filter>
+    </Content>
+    <None Include="ballfallnative.iOS\Info.plist">
+      <Filter>ballfallnative.iOS\Supporting Files</Filter>
+    </None>
+    <ObjCCompile Include="ballfallnative.iOS\AppDelegate.mm">
+      <Filter>ballfallnative.iOS</Filter>
+    </ObjCCompile>
+    <ObjCCompile Include="ballfallnative.iOS\GameViewController.mm">
+      <Filter>ballfallnative.iOS</Filter>
+    </ObjCCompile>
+    <ObjCCompile Include="ballfallnative.iOS\main.mm">
+      <Filter>ballfallnative.iOS\Supporting Files</Filter>
+    </ObjCCompile>
+  </ItemGroup>
+</Project>
