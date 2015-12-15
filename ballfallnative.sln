@@ -23,11 +23,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ballfallnative.iOS.StaticLi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ballfallnative.WindowsUniversal.StaticLibrary", "ballfallnative\ballfallnative.WindowsUniversal.StaticLibrary\ballfallnative.WindowsUniversal.StaticLibrary.vcxproj", "{D9C3160A-9C29-48AC-8834-4214099885D4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game.Shared", "ballfallnative\game.Shared\game.Shared.vcxitems", "{60AFF5A2-9530-45A6-A017-C181F09012D5}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ballfallnative\game.Shared\game.Shared.vcxitems*{061cec3c-0a3f-4623-8b39-badab980cc88}*SharedItemsImports = 4
 		ballfallnative\ballfallnative.Shared\ballfallnative.Shared.vcxitems*{061cec3c-0a3f-4623-8b39-badab980cc88}*SharedItemsImports = 4
+		ballfallnative\game.Shared\game.Shared.vcxitems*{c65b314a-a413-4a58-9d02-9d622dd5e4e7}*SharedItemsImports = 4
 		ballfallnative\ballfallnative.Shared\ballfallnative.Shared.vcxitems*{c65b314a-a413-4a58-9d02-9d622dd5e4e7}*SharedItemsImports = 4
+		ballfallnative\game.Shared\game.Shared.vcxitems*{d9c3160a-9c29-48ac-8834-4214099885d4}*SharedItemsImports = 4
 		ballfallnative\ballfallnative.Shared\ballfallnative.Shared.vcxitems*{d9c3160a-9c29-48ac-8834-4214099885d4}*SharedItemsImports = 4
+		ballfallnative\game.Shared\game.Shared.vcxitems*{60aff5a2-9530-45a6-a017-c181f09012d5}*SharedItemsImports = 9
 		ballfallnative\ballfallnative.Shared\ballfallnative.Shared.vcxitems*{fe9b7656-0182-4131-86f8-a6a95113e645}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -176,5 +182,6 @@ Global
 		{C65B314A-A413-4A58-9D02-9D622DD5E4E7} = {6D12A3D8-8C89-4B60-8178-F256E220ACDB}
 		{061CEC3C-0A3F-4623-8B39-BADAB980CC88} = {6D12A3D8-8C89-4B60-8178-F256E220ACDB}
 		{D9C3160A-9C29-48AC-8834-4214099885D4} = {6D12A3D8-8C89-4B60-8178-F256E220ACDB}
+		{60AFF5A2-9530-45A6-A017-C181F09012D5} = {6D12A3D8-8C89-4B60-8178-F256E220ACDB}
 	EndGlobalSection
 EndGlobal

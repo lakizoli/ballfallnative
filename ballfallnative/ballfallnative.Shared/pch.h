@@ -23,4 +23,24 @@
 
 	#include <android/log.h>
 
+#elif __APPLE__
+#	error not implemented
 #endif
+
+//Cross platform includes
+#include <vector>
+#include <map>
+#include <deque>
+#include <array>
+#include <tuple>
+#include <functional>
+#include <algorithm>
+#include <string>
+#include <utility>
+#include <cmath>
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+#include <glm/glm.hpp>
+#include <glm/gtx/component_wise.hpp>

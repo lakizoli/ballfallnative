@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)content\geom.cpp">
+      <Filter>content</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)content\animation.cpp">
+      <Filter>content</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)management\scene.h">
+      <Filter>management</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)content\rect2D.h">
+      <Filter>content</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)content\vector2D.h">
+      <Filter>content</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)content\geom.h">
+      <Filter>content</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)content\animation.h">
+      <Filter>content</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)content\qte.h">
+      <Filter>content</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="content">
+      <UniqueIdentifier>{2a49c7f1-dbba-4ff8-bb6c-4a85c68057f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="management">
+      <UniqueIdentifier>{662404e6-7bf9-444b-8f34-fd36cc36c8be}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

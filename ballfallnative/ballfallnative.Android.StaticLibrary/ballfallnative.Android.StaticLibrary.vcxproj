@@ -90,6 +90,7 @@
   <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="Shared">
     <Import Project="..\ballfallnative.Shared\ballfallnative.Shared.vcxitems" Label="Shared" />
+    <Import Project="..\game.Shared\game.Shared.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
