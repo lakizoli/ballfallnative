@@ -22,13 +22,13 @@
 
 #	include <android/log.h>
 
-#	include <GLES2/gl2.h>
-#	include <GLES2/gl2ext.h>
+#	include <GLES/gl.h>
+#	include <GLES/glext.h>
 
 #elif __APPLE__
 
-#	include <OpenGLES/ES2/gl.h>
-#	include <OpenGLES/ES2/glext.h>
+#	include <OpenGLES/ES1/gl.h>
+#	include <OpenGLES/ES1/glext.h>
 
 #endif
 

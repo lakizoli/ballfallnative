@@ -170,7 +170,7 @@ void App::InitializeEGL(CoreWindow^ window)
 
     const EGLint contextAttributes[] = 
     { 
-        EGL_CONTEXT_CLIENT_VERSION, 2, 
+        EGL_CONTEXT_CLIENT_VERSION, 1, 
         EGL_NONE
     };
 

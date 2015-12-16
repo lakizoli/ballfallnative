@@ -97,7 +97,7 @@ static int engine_init_display(struct engine* engine) {
 
 	surface = eglCreateWindowSurface(display, config, engine->app->window, NULL);
 
-	EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+	EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 1, EGL_NONE };
 	context = eglCreateContext(display, config, NULL, contextAttribs);
 
 	if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) {

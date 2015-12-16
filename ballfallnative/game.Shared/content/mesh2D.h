@@ -58,38 +58,8 @@ protected:
 
 	Rect2D CalculateBoundingBox (const vector<float>& vertices) const;
 
-    //protected int NewVBO<T> (T[] data) where T : struct  {
-    //    int vboID = 0;
-    //    GL.GenBuffers (1, ref vboID);
-
-    //    GL.BindBuffer (All.ArrayBuffer, vboID);
-    //    GL.BufferData<T> (All.ArrayBuffer, (IntPtr)(data.Length * Marshal.SizeOf (typeof (T))), data, All.StaticDraw);
-
-    //    return vboID;
-    //}
-
-    //protected int[] NewTexturedVBO (int texID, float[] vertices = null, float[] texCoords = null) {
-    //    if (vertices == null) {
-    //        vertices = new float[] {
-    //            -1.0f, -1.0f,
-    //            1.0f, -1.0f,
-    //            -1.0f, 1.0f,
-    //            1.0f, 1.0f
-    //        };
-    //    }
-
-    //    BoundingBox = CalculateBoundingBox (vertices);
-
-    //    return new int[] {
-    //        NewVBO<float> (vertices),
-    //        NewVBO<float> (texCoords == null ? new float[] {
-    //            0.0f, 0.0f,
-    //            1.0f, 0.0f,
-    //            0.0f, 1.0f,
-    //            1.0f, 1.0f
-    //        } : texCoords)
-    //    };
-    //}
+	int NewVBO (const vector<float>& data) const;
+	vector<int> NewTexturedVBO (int texID, const vector<float>& vertices = vector<float> (), const vector<float>& texCoords = vector<float> ());
 
 	void RenderTexturedVBO (int texID, int vertCoordID, int texCoordID, GLenum mode = GL_TRIANGLE_STRIP, int vertexCount = 4) const;
 };

@@ -2,63 +2,9 @@
 #include "game.h"
 
 shared_ptr<Game> Game::mGame;
+shared_ptr<IUtil> Game::mUtil;
+shared_ptr<IContentManager> Game::mContentManager;
 
-//using System;
-//using OpenTK.Graphics.ES11;
-//using game.content;
-//
-////Játék öletek:
-////1.) ballfall: leesõ labdák válogatása különbözõ színû csövekbe
-////2.) dekázo játék: egy labdát kell dekázni mindenféle szélben, esõben, ill. különbözõ skill-ek gesture függõen stb...
-////3.) trojan horse
-////4.) varfal védelem
-////5.) krakout, traz (C64)
-////6.) hunch back (C64)
-////7.) pörgõ leveleken ugráló béka
-//
-//namespace game.management {
-//    #region OS specific interfaces
-//    public interface IContentManager {
-//        IDisposable LoadImage (string asset);
-//
-//        IntPtr LockPixels (object image);
-//
-//        void UnlockPixels (object image);
-//
-//        int GetWidth (object image);
-//
-//        int GetHeight (object image);
-//
-//        void SetTopLeftStyle (float size, float red, float green, float blue, float alpha);
-//
-//        void SetTopRightStyle (float size, float red, float green, float blue, float alpha);
-//
-//        void SetTopLeftStatus (string text);
-//
-//        void SetTopRightStatus (string text);
-//    }
-//
-//    public interface IUtil {
-//        void Log (string log);
-//    }
-//    #endregion
-//
-//    public abstract class Game {
-//        #region Management data
-//        static Game _game;
-//        public static Game Instance { get { return _game; } }
-//
-//        static IUtil _util;
-//        public static IUtil Util { get { return _util; } }
-//
-//        static IContentManager _contentManager;
-//        public static IContentManager ContentManager { get { return _contentManager; } }
-//        #endregion
-//
-//        #region Data
-//        int _width = 0;
-//        int _height = 0;
-//
 //        private Scene _currentScene;
 //        public Scene CurrentScene
 //        {
@@ -119,63 +65,6 @@ shared_ptr<Game> Game::mGame;
 //        }
 //        #endregion
 //
-
-glm::mat4& Game::SelectMatrix (Matrix matrix) {
-	mCurrentMatrix = matrix;
-
-	switch (matrix) {
-	default:
-	case Game::Matrix::Model:
-		mMatrix = mModelMatrixStack.top ();
-		break;
-	case Game::Matrix::View:
-		mMatrix = mViewMatrixStack.top ();
-		break;
-	case Game::Matrix::Projection:
-		mMatrix = mProjectionMatrixStack.top ();
-		break;
-	}
-
-	return mMatrix;
-}
-
-glm::mat4& Game::PushMatrix () {
-	switch (mCurrentMatrix) {
-	default:
-	case Game::Matrix::Model:
-		mModelMatrixStack.push (mMatrix);
-		break;
-	case Game::Matrix::View:
-		mViewMatrixStack.push (mMatrix);
-		break;
-	case Game::Matrix::Projection:
-		mProjectionMatrixStack.push (mMatrix);
-		break;
-	}
-
-	return mMatrix;
-}
-
-glm::mat4& Game::PopMatrix () {
-	switch (mCurrentMatrix) {
-	default:
-	case Game::Matrix::Model:
-		mMatrix = mModelMatrixStack.top ();
-		mModelMatrixStack.pop ();
-		break;
-	case Game::Matrix::View:
-		mMatrix = mViewMatrixStack.top ();
-		mViewMatrixStack.pop ();
-		break;
-	case Game::Matrix::Projection:
-		mMatrix = mProjectionMatrixStack.top ();
-		mProjectionMatrixStack.pop ();
-		break;
-	}
-
-	return mMatrix;
-}
-
 //        #region Input handlers
 //        public virtual void TouchDown (int fingerID, float x, float y) {
 //            if (_currentScene != null)
@@ -193,36 +82,30 @@ glm::mat4& Game::PopMatrix () {
 //        }
 //        #endregion
 //
-//        #region Helper methods
-//        public Vector2D ToLocal (float x, float y) {
-//            float min = Math.Min (_width, _height);
-//            float max = Math.Max (_width, _height);
-//            float aspect = max / min;
-//            if (_width <= _height) {
-//                return new Vector2D (x / (float)_width, aspect * y / (float)_height);
-//            }
-//
-//            return new Vector2D (aspect * x / (float)_width, y / (float)_height);
-//        }
-//        #endregion
-//
-//        #region Inner methods
-//        private void InitProjection (int width, int height) {
-//            _width = width;
-//            _height = height;
-//
-//            GL.MatrixMode (All.Projection);
-//            GL.LoadIdentity ();
-//
-//            float min = Math.Min (width, height);
-//            float max = Math.Max (width, height);
-//            float aspect = max / min;
-//            if (width <= height) {
-//                GL.Ortho (0, 1.0f, aspect, 0, -1.0f, 1.0f);
-//            } else {
-//                GL.Ortho (0, aspect, 1.0f, 0, -1.0f, 1.0f);
-//            }
-//        }
-//        #endregion
-//    }
-//}
+Vector2D Game::ToLocal (float x, float y) const {
+	float min = (float) std::min (mWidth, mHeight);
+	float max = (float) std::max (mWidth, mHeight);
+    float aspect = max / min;
+    if (mWidth <= mHeight) {
+        return Vector2D (x / (float)mWidth, aspect * y / (float)mHeight);
+    }
+
+    return Vector2D (aspect * x / (float)mWidth, y / (float)mHeight);
+}
+
+void Game::InitProjection (int width, int height) {
+    mWidth = width;
+    mHeight = height;
+
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity ();
+
+    float min = (float) std::min (width, height);
+    float max = (float) std::max (width, height);
+    float aspect = max / min;
+    if (width <= height) {
+		glOrthof (0, 1.0f, aspect, 0, -1.0f, 1.0f);
+    } else {
+		glOrthof (0, aspect, 1.0f, 0, -1.0f, 1.0f);
+    }
+}

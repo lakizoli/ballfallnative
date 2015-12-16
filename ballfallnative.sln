@@ -27,12 +27,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game.Shared", "ballfallnati
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ballfallnative\game.Shared\game.Shared.vcxitems*{061cec3c-0a3f-4623-8b39-badab980cc88}*SharedItemsImports = 4
 		ballfallnative\ballfallnative.Shared\ballfallnative.Shared.vcxitems*{061cec3c-0a3f-4623-8b39-badab980cc88}*SharedItemsImports = 4
-		ballfallnative\game.Shared\game.Shared.vcxitems*{c65b314a-a413-4a58-9d02-9d622dd5e4e7}*SharedItemsImports = 4
+		ballfallnative\game.Shared\game.Shared.vcxitems*{061cec3c-0a3f-4623-8b39-badab980cc88}*SharedItemsImports = 4
 		ballfallnative\ballfallnative.Shared\ballfallnative.Shared.vcxitems*{c65b314a-a413-4a58-9d02-9d622dd5e4e7}*SharedItemsImports = 4
-		ballfallnative\game.Shared\game.Shared.vcxitems*{d9c3160a-9c29-48ac-8834-4214099885d4}*SharedItemsImports = 4
+		ballfallnative\game.Shared\game.Shared.vcxitems*{c65b314a-a413-4a58-9d02-9d622dd5e4e7}*SharedItemsImports = 4
 		ballfallnative\ballfallnative.Shared\ballfallnative.Shared.vcxitems*{d9c3160a-9c29-48ac-8834-4214099885d4}*SharedItemsImports = 4
+		ballfallnative\game.Shared\game.Shared.vcxitems*{d9c3160a-9c29-48ac-8834-4214099885d4}*SharedItemsImports = 4
 		ballfallnative\game.Shared\game.Shared.vcxitems*{60aff5a2-9530-45a6-a017-c181f09012d5}*SharedItemsImports = 9
 		ballfallnative\ballfallnative.Shared\ballfallnative.Shared.vcxitems*{fe9b7656-0182-4131-86f8-a6a95113e645}*SharedItemsImports = 9
 	EndGlobalSection

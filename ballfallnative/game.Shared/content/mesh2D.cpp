@@ -16,16 +16,15 @@ void Mesh2D::Shutdown ()
 
 void Mesh2D::Render ()
 {
-	Game& game = Game::Get ();
+	glPushMatrix ();
 
-	glm::mat4& matrix = game.PushMatrix ();
-	matrix = glm::translate (matrix, glm::vec3 (Pos.x, Pos.y, 0.0f));
-	matrix = glm::rotate (matrix, Rotation, glm::vec3 (0.0f, 0.0f, 1.0f));
-	matrix = glm::scale (matrix, glm::vec3 (Scale.x, Scale.y, 1.0f));
+	glTranslatef (Pos.x, Pos.y, 0.0f);
+	glRotatef (Rotation, 0.0f, 0.0f, 1.0f);
+	glScalef (Scale.x, Scale.y, 1);
 
-    RenderMesh ();
+	RenderMesh ();
 
-    game.PopMatrix ();
+	glPopMatrix ();
 }
 
 //        #region Helper methods
@@ -62,38 +61,43 @@ Rect2D Mesh2D::CalculateBoundingBox (const vector<float>& vertices) const {
     return Rect2D (min, max);
 }
 
-//        protected int NewVBO<T> (T[] data) where T : struct  {
-//            int vboID = 0;
-//            GL.GenBuffers (1, ref vboID);
-//
-//            GL.BindBuffer (All.ArrayBuffer, vboID);
-//            GL.BufferData<T> (All.ArrayBuffer, (IntPtr)(data.Length * Marshal.SizeOf (typeof (T))), data, All.StaticDraw);
-//
-//            return vboID;
-//        }
-//
-//        protected int[] NewTexturedVBO (int texID, float[] vertices = null, float[] texCoords = null) {
-//            if (vertices == null) {
-//                vertices = new float[] {
-//                    -1.0f, -1.0f,
-//                    1.0f, -1.0f,
-//                    -1.0f, 1.0f,
-//                    1.0f, 1.0f
-//                };
-//            }
-//
-//            BoundingBox = CalculateBoundingBox (vertices);
-//
-//            return new int[] {
-//                NewVBO<float> (vertices),
-//                NewVBO<float> (texCoords == null ? new float[] {
-//                    0.0f, 0.0f,
-//                    1.0f, 0.0f,
-//                    0.0f, 1.0f,
-//                    1.0f, 1.0f
-//                } : texCoords)
-//            };
-//        }
+int Mesh2D::NewVBO (const vector<float>& data) const {
+    GLuint vboID = 0;
+    glGenBuffers (1, &vboID);
+
+    glBindBuffer (GL_ARRAY_BUFFER, vboID);
+    glBufferData (GL_ARRAY_BUFFER, data.size () * sizeof (float), &data[0], GL_STATIC_DRAW);
+
+    return vboID;
+}
+
+vector<int> Mesh2D::NewTexturedVBO (int texID, const vector<float>& vertices, const vector<float>& texCoords) {
+	int vboID = 0;
+    if (vertices.size () <= 0) {
+        vector<float> quad ({
+            -1.0f, -1.0f,
+            1.0f, -1.0f,
+            -1.0f, 1.0f,
+            1.0f, 1.0f
+        });
+
+		vboID = NewVBO (quad);
+		mBoundingBox = CalculateBoundingBox (quad);
+	} else {
+		vboID = NewVBO (vertices);
+		mBoundingBox = CalculateBoundingBox (vertices);
+	}
+
+    return {
+        vboID,
+        NewVBO (texCoords.size () <= 0 ? vector<float> ({
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 1.0f
+        }) : texCoords)
+    };
+}
 
 void Mesh2D::RenderTexturedVBO (int texID, int vertCoordID, int texCoordID, GLenum mode, int vertexCount) const {
     glEnable (GL_BLEND);
@@ -102,13 +106,13 @@ void Mesh2D::RenderTexturedVBO (int texID, int vertCoordID, int texCoordID, GLen
     glEnable (GL_TEXTURE_2D);
     glBindTexture (GL_TEXTURE_2D, texID);
 
-    //GL.BindBuffer (All.ArrayBuffer, vertCoordID);
-    //GL.VertexPointer (2, All.Float, 0, IntPtr.Zero);
-    //GL.EnableClientState (All.VertexArray);
+    glBindBuffer (GL_ARRAY_BUFFER, vertCoordID);
+    glVertexPointer (2, GL_FLOAT, 0, nullptr);
+    glEnableClientState (GL_VERTEX_ARRAY);
 
-    //GL.BindBuffer (All.ArrayBuffer, texCoordID);
-    //GL.TexCoordPointer (2, All.Float, 0, IntPtr.Zero);
-    //GL.EnableClientState (All.TextureCoordArray);
+    glBindBuffer (GL_ARRAY_BUFFER, texCoordID);
+    glTexCoordPointer (2, GL_FLOAT, 0, nullptr);
+    glEnableClientState (GL_TEXTURE_COORD_ARRAY);
 
     glDrawArrays (mode, 0, vertexCount);
 }
