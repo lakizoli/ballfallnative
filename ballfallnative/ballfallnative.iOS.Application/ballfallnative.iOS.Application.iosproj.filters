@@ -2,16 +2,16 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="ballfallnative.iOS">
-      <UniqueIdentifier>{95cf7bca-9755-4cc7-86e0-5b45ce605475}</UniqueIdentifier>
+      <UniqueIdentifier>{1ef0df47-9e03-468b-ae73-edaa6586dd17}</UniqueIdentifier>
     </Filter>
     <Filter Include="ballfallnative.iOS\Supporting Files">
-      <UniqueIdentifier>{3959fe02-bb18-4b9d-b82b-1c782d683fc3}</UniqueIdentifier>
+      <UniqueIdentifier>{eec0ce33-776c-44e0-9483-f2d85dd589e5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images.xcassets">
-      <UniqueIdentifier>{60ba8036-51d3-45d1-a996-1871ddda110a}</UniqueIdentifier>
+      <UniqueIdentifier>{aff5d5a2-54a0-4115-a24b-9f279bd1b19f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Products">
-      <UniqueIdentifier>{5f470b24-c265-4e29-8924-28c1314dd433}</UniqueIdentifier>
+      <UniqueIdentifier>{8c6e6886-02a0-424a-825f-273df13259a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -14,17 +14,22 @@
 	#include <windows.h>
 #elif __ANDROID__
 
-	#include <jni.h>
-	#include <errno.h>
+#	include <jni.h>
+#	include <errno.h>
 
-	#include <string.h>
-	#include <unistd.h>
-	#include <sys/resource.h>
+#	include <string.h>
+#	include <sys/resource.h>
 
-	#include <android/log.h>
+#	include <android/log.h>
+
+#	include <GLES2/gl2.h>
+#	include <GLES2/gl2ext.h>
 
 #elif __APPLE__
-#	error not implemented
+
+#	include <OpenGLES/ES2/gl.h>
+#	include <OpenGLES/ES2/glext.h>
+
 #endif
 
 //Cross platform includes
@@ -33,6 +38,7 @@
 #include <deque>
 #include <array>
 #include <tuple>
+#include <memory>
 #include <functional>
 #include <algorithm>
 #include <string>
@@ -41,6 +47,8 @@
 #include <iostream>
 #include <iomanip>
 using namespace std;
+
+#include <unistd.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/component_wise.hpp>

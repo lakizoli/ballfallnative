@@ -128,12 +128,12 @@ public:
 			return true;
 
 		// Handle NaN, Infinity.
-		if (isnanf (x) || isnanf (vec.x))
-			return isnanf (x) == isnanf (vec.x);
+		if (isnan (x) || isnan (vec.x))
+			return isnan (x) == isnan (vec.x);
 		else if (isinf (x) || isinf (vec.x))
 			return isinf (x) == isinf (vec.x);
-		else if (isnanf (y) || isnanf (vec.y))
-			return isnanf (y) == isnanf (vec.y);
+		else if (isnan (y) || isnan (vec.y))
+			return isnan (y) == isnan (vec.y);
 		else if (isinf (y) || isinf (vec.y))
 			return isinf (y) == isinf (vec.y);
 

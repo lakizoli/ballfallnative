@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "geom.h"
 
 vector<Vector2D> Geom::LineCircleIntersection (const Vector2D& dir, const Vector2D& pt, const Vector2D& origin, float radius) {

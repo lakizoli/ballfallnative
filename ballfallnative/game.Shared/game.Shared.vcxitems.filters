@@ -7,6 +7,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)content\animation.cpp">
       <Filter>content</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)content\mesh2D.cpp">
+      <Filter>content</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)management\game.cpp">
+      <Filter>management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)management\scene.h">
@@ -26,6 +32,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)content\qte.h">
       <Filter>content</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)content\mesh2D.h">
+      <Filter>content</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)management\game.h">
+      <Filter>management</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

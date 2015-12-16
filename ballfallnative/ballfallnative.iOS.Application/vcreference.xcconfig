@@ -1,2 +1,2 @@
-OTHER_LIBTOOLFLAGS =  $(inherited)
-OTHER_LDFLAGS =  $(inherited)
+OTHER_LIBTOOLFLAGS = "/Users/zlaki/vcremote/C/work/git_repos/ballfallnative/ballfallnative/ballfallnative.iOS.StaticLibrary/$(CONFIGURATION)/$(CURRENT_ARCH)/libballfallnative.iOS.StaticLibrary.a" $(inherited)
+OTHER_LDFLAGS = "/Users/zlaki/vcremote/C/work/git_repos/ballfallnative/ballfallnative/ballfallnative.iOS.StaticLibrary/$(CONFIGURATION)/$(CURRENT_ARCH)/libballfallnative.iOS.StaticLibrary.a" $(inherited)
