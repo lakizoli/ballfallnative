@@ -94,24 +94,21 @@ Rect2D Mesh2D::CalculateBoundingBox (const vector<float>& vertices) const {
 //                } : texCoords)
 //            };
 //        }
-//
-//        protected void RenderTexturedVBO (int texID, int vertCoordID, int texCoordID, All mode = All.TriangleStrip, int vertexCount = 4) {
-//            GL.Enable (All.Blend);
-//            GL.BlendFunc (All.SrcAlpha, All.OneMinusSrcAlpha);
-//
-//            GL.Enable (All.Texture2D);
-//            GL.BindTexture (All.Texture2D, texID);
-//
-//            GL.BindBuffer (All.ArrayBuffer, vertCoordID);
-//            GL.VertexPointer (2, All.Float, 0, IntPtr.Zero);
-//            GL.EnableClientState (All.VertexArray);
-//
-//            GL.BindBuffer (All.ArrayBuffer, texCoordID);
-//            GL.TexCoordPointer (2, All.Float, 0, IntPtr.Zero);
-//            GL.EnableClientState (All.TextureCoordArray);
-//
-//            GL.DrawArrays (mode, 0, vertexCount);
-//        }
-//        #endregion
-//    }
-//}
+
+void Mesh2D::RenderTexturedVBO (int texID, int vertCoordID, int texCoordID, GLenum mode, int vertexCount) const {
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable (GL_TEXTURE_2D);
+    glBindTexture (GL_TEXTURE_2D, texID);
+
+    //GL.BindBuffer (All.ArrayBuffer, vertCoordID);
+    //GL.VertexPointer (2, All.Float, 0, IntPtr.Zero);
+    //GL.EnableClientState (All.VertexArray);
+
+    //GL.BindBuffer (All.ArrayBuffer, texCoordID);
+    //GL.TexCoordPointer (2, All.Float, 0, IntPtr.Zero);
+    //GL.EnableClientState (All.TextureCoordArray);
+
+    glDrawArrays (mode, 0, vertexCount);
+}

@@ -16,13 +16,17 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)content\animation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)content\geom.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)content\mesh2D.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)management\game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)content\animation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)content\geom.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)content\mesh2D.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)content\qte.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)content\rect2D.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)content\vector2D.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)management\game.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)management\scene.h" />
   </ItemGroup>
 </Project>
