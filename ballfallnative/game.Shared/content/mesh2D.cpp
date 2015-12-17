@@ -27,23 +27,22 @@ void Mesh2D::Render ()
 	glPopMatrix ();
 }
 
-//        #region Helper methods
-//        protected int LoadTextureFromAsset (string asset) {
-//            int texID = 0;
-//            GL.GenTextures (1, ref texID);
-//            GL.BindTexture (All.Texture2D, texID);
-//
-//            using (var image = Game.ContentManager.LoadImage (asset)) {
-//                IntPtr pixels = Game.ContentManager.LockPixels (image);
-//                GL.TexImage2D (All.Texture2D, 0, (int)All.Rgba, Game.ContentManager.GetWidth (image), Game.ContentManager.GetHeight (image), 0, All.Rgba, All.UnsignedByte, pixels);
-//                Game.ContentManager.UnlockPixels (image);
-//            }
-//
-//            GL.TexParameter (All.Texture2D, All.TextureMinFilter, (int)All.Linear);
-//            GL.TexParameter (All.Texture2D, All.TextureMagFilter, (int)All.Linear);
-//
-//            return texID;
-//        }
+GLuint Mesh2D::LoadTextureFromAsset (const string& asset) const {
+    GLuint texID = 0;
+    glGenTextures (1, &texID);
+    glBindTexture (GL_TEXTURE_2D, texID);
+
+    //using (var image = Game.ContentManager.LoadImage (asset)) {
+    //    IntPtr pixels = Game.ContentManager.LockPixels (image);
+    //    GL.TexImage2D (All.Texture2D, 0, (int)All.Rgba, Game.ContentManager.GetWidth (image), Game.ContentManager.GetHeight (image), 0, All.Rgba, All.UnsignedByte, pixels);
+    //    Game.ContentManager.UnlockPixels (image);
+    //}
+
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    return texID;
+}
 
 Rect2D Mesh2D::CalculateBoundingBox (const vector<float>& vertices) const {
     Vector2D min (FLT_MAX, FLT_MAX);
@@ -61,7 +60,7 @@ Rect2D Mesh2D::CalculateBoundingBox (const vector<float>& vertices) const {
     return Rect2D (min, max);
 }
 
-int Mesh2D::NewVBO (const vector<float>& data) const {
+GLuint Mesh2D::NewVBO (const vector<float>& data) const {
     GLuint vboID = 0;
     glGenBuffers (1, &vboID);
 
@@ -71,8 +70,8 @@ int Mesh2D::NewVBO (const vector<float>& data) const {
     return vboID;
 }
 
-vector<int> Mesh2D::NewTexturedVBO (int texID, const vector<float>& vertices, const vector<float>& texCoords) {
-	int vboID = 0;
+vector<GLuint> Mesh2D::NewTexturedVBO (GLuint texID, const vector<float>& vertices, const vector<float>& texCoords) {
+	GLuint vboID = 0;
     if (vertices.size () <= 0) {
         vector<float> quad ({
             -1.0f, -1.0f,
@@ -82,10 +81,10 @@ vector<int> Mesh2D::NewTexturedVBO (int texID, const vector<float>& vertices, co
         });
 
 		vboID = NewVBO (quad);
-		mBoundingBox = CalculateBoundingBox (quad);
+		boundingBox = CalculateBoundingBox (quad);
 	} else {
 		vboID = NewVBO (vertices);
-		mBoundingBox = CalculateBoundingBox (vertices);
+		boundingBox = CalculateBoundingBox (vertices);
 	}
 
     return {
@@ -99,7 +98,7 @@ vector<int> Mesh2D::NewTexturedVBO (int texID, const vector<float>& vertices, co
     };
 }
 
-void Mesh2D::RenderTexturedVBO (int texID, int vertCoordID, int texCoordID, GLenum mode, int vertexCount) const {
+void Mesh2D::RenderTexturedVBO (GLuint texID, GLuint vertCoordID, GLuint texCoordID, GLenum mode, int vertexCount) const {
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

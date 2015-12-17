@@ -3,81 +3,38 @@
 /// Base class of all quick time event.
 class QTE {
 private:
-    bool mIsStarted;
-    bool mIsPaused;
+	bool mIsStarted;
+	bool mIsPaused;
 
 protected:
 	QTE () : mIsStarted (false), mIsPaused (false) {}
 
 public:
-    virtual void Init () {}
-    virtual void Shutdown () {}
+	virtual void Init () {}
+	virtual void Shutdown () {}
 
-    void Start () {
-        if (mIsStarted)
-            return;
+	void Start ();
+	void Stop ();
 
-        mIsStarted = true;
-        mIsPaused = false;
+	bool IsStarted () const {
+		return mIsStarted;
+	}
 
-        OnStart ();
-    }
+	void Pause ();
+	void Continue ();
 
-    void Stop () {
-        if (!mIsStarted)
-            return;
+	bool IsPaused () const {
+		return mIsPaused;
+	}
 
-        mIsStarted = false;
-        mIsPaused = false;
-
-        OnStop ();
-    }
-
-    bool IsStarted () const {
-        return mIsStarted;
-    }
-
-    void Pause () {
-        if (!mIsStarted || mIsPaused)
-            return;
-
-        mIsPaused = true;
-
-        OnPause ();
-    }
-
-    void Continue () {
-        if (!mIsStarted || !mIsPaused)
-            return;
-
-        mIsPaused = false;
-
-        OnContinue ();
-    }
-
-    bool IsPaused () const {
-        return mIsPaused;
-    }
-
-    void Update (float elapsedTime) {
-        if (!mIsStarted || mIsPaused)
-            return;
-
-        OnUpdate (elapsedTime);
-    }
-
-    void Render () {
-        if (!mIsStarted)
-            return;
-
-        OnRender ();
-    }
+	void Update (float elapsedTime);
+	void Render ();
 
 protected:
-    virtual void OnStart () { }
-    virtual void OnStop () { }
-    virtual void OnPause () { }
-    virtual void OnContinue () { }
-    virtual void OnUpdate (float elapsedTime) { }
-    virtual void OnRender () { }
+	virtual void OnStart () {}
+	virtual void OnStop () {}
+	virtual void OnPause () {}
+	virtual void OnContinue () {}
+	virtual void OnUpdate (float elapsedTime) {}
+	virtual void OnRender () {}
 };

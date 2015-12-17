@@ -4,15 +4,14 @@
 #include "rect2D.h"
 
 /// Base class for 2D meshes.
-class Mesh2D {
+class Mesh2D : public enable_shared_from_this<Mesh2D> {
 //Data
 public:
 	Vector2D Pos;
 	float Rotation;
 	Vector2D Scale;
 
-protected:
-	Rect2D mBoundingBox;
+	Rect2D boundingBox;
 
 //Construction
 protected:
@@ -27,39 +26,19 @@ public:
 protected:
     virtual void RenderMesh () = 0;
 
-//Data
-public:
-	const Rect2D& BoundingBox () const {
-		return mBoundingBox;
-	}
-
-	Rect2D TransformedBoundingBox () const {
-		return mBoundingBox.Scale (Scale).Offset (Pos);
-	}
-
 //Helper methods
+public:
+	Rect2D TransformedBoundingBox () const {
+		return boundingBox.Scale (Scale).Offset (Pos);
+	}
+
 protected:
-    //protected int LoadTextureFromAsset (string asset) {
-    //    int texID = 0;
-    //    GL.GenTextures (1, ref texID);
-    //    GL.BindTexture (All.Texture2D, texID);
-
-    //    using (var image = Game.ContentManager.LoadImage (asset)) {
-    //        IntPtr pixels = Game.ContentManager.LockPixels (image);
-    //        GL.TexImage2D (All.Texture2D, 0, (int)All.Rgba, Game.ContentManager.GetWidth (image), Game.ContentManager.GetHeight (image), 0, All.Rgba, All.UnsignedByte, pixels);
-    //        Game.ContentManager.UnlockPixels (image);
-    //    }
-
-    //    GL.TexParameter (All.Texture2D, All.TextureMinFilter, (int)All.Linear);
-    //    GL.TexParameter (All.Texture2D, All.TextureMagFilter, (int)All.Linear);
-
-    //    return texID;
-    //}
+	GLuint LoadTextureFromAsset (const string& asset) const;
 
 	Rect2D CalculateBoundingBox (const vector<float>& vertices) const;
 
-	int NewVBO (const vector<float>& data) const;
-	vector<int> NewTexturedVBO (int texID, const vector<float>& vertices = vector<float> (), const vector<float>& texCoords = vector<float> ());
+	GLuint NewVBO (const vector<float>& data) const;
+	vector<GLuint> NewTexturedVBO (GLuint texID, const vector<float>& vertices = vector<float> (), const vector<float>& texCoords = vector<float> ());
 
-	void RenderTexturedVBO (int texID, int vertCoordID, int texCoordID, GLenum mode = GL_TRIANGLE_STRIP, int vertexCount = 4) const;
+	void RenderTexturedVBO (GLuint texID, GLuint vertCoordID, GLuint texCoordID, GLenum mode = GL_TRIANGLE_STRIP, int vertexCount = 4) const;
 };

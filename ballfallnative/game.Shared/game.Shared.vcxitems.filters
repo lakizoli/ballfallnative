@@ -13,6 +13,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)management\game.cpp">
       <Filter>management</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)content\qte.cpp">
+      <Filter>content</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)content\rigidbody2D.cpp">
+      <Filter>content</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)management\scene.h">
@@ -38,6 +44,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)management\game.h">
       <Filter>management</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)management\IContentManager.h">
+      <Filter>management</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)management\IUtil.h">
+      <Filter>management</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)content\rigidbody2D.h">
+      <Filter>content</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

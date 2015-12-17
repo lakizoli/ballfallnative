@@ -47,6 +47,7 @@
 #include <cmath>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 using namespace std;
 
 #include <unistd.h>
