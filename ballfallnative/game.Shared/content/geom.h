@@ -3,6 +3,7 @@
 #include "vector2D.h"
 
 class Geom {
+public:
     /// <summary>
     /// Calculate intersection point of a line and a circle.
     /// 
@@ -13,6 +14,6 @@ class Geom {
     /// <param name="pt">On point of the line.</param>
     /// <param name="origin">The origin of the circle.</param>
     /// <param name="radius">The radius of the circle.</param>
-    /// <returns>null, when no intersection found.</returns>
+    /// <returns>empty vector, when no intersection found.</returns>
 	static vector<Vector2D> LineCircleIntersection (const Vector2D& dir, const Vector2D& pt, const Vector2D& origin, float radius);
 };

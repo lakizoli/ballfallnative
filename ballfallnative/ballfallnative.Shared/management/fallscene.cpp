@@ -16,7 +16,8 @@ void FallScene::Init (int width, int height) {
 	_lastMins = 0;
 	_lastSecs = 0;
 
-	//_random = new Random ();
+	srand (time (0));
+
 	_fullTime = 0;
 	_lastAddTime = 0;
 
@@ -175,13 +176,15 @@ void FallScene::Update (float elapsedTime) {
 	for (int i = (int) _fallingBalls.size () - 1; i >= 0; --i) {
 		shared_ptr<FallingBall> item = _fallingBalls[i];
 		item->body->Force += Vector2D (0, 1.0f * RigidBody2D::Gravity);
-		item->body->Update (elapsedTime);
+		item->body->Update (elapsedTime, [&] (const RigidBody2D* body) -> shared_ptr<RigidBody2D> {
+			return FindCollision (body);
+		});
 
 		if (item->body->CollideBody != nullptr) { //If this item collide with other item
-			shared_ptr<Mesh2D> collideBall = item->body->CollideBody->Mesh;
-			if (collideBall != nullptr && ((Ball*) collideBall.get ())->Type () == Ball::Color::Bomb) { //Handle collision with bomb
+			shared_ptr<Ball> collideBall = dynamic_pointer_cast<Ball, Mesh2D> (item->body->CollideBody->Mesh);
+			if (collideBall != nullptr && collideBall->Type () == Ball::Color::Bomb) { //Handle collision with bomb
 				_fallingBalls.erase (_fallingBalls.begin () + i);
-				HandleBombBlowEnd (shared_ptr<Ball> ((Ball*) collideBall.get ()));
+				HandleBombBlowEnd (collideBall);
 				continue;
 			} else if (item->ball->Type () == Ball::Color::Bomb) { //Handle collision with bomb
 				_fallingBalls.erase (_fallingBalls.begin () + i);
@@ -413,6 +416,43 @@ void FallScene::TouchMove (int fingerID, float x, float y) {
 	}
 }
 
+void FallScene::AddNewBalls (const LevelDefinition & level) {
+	if (_state == State::Game && _lastAddTime > NextRandom (level.minAddTime, level.maxAddTime) / 1000.0f) {
+		Game& game = Game::Get ();
+		int addCount = 1; //_random.Next (1, level.maxAddCount + 1);
+		for (int i = 0; i < addCount; ++i) {
+			shared_ptr<Ball> ball;
+			switch (NextRandom (6)) {
+			default:
+			case 0: ball.reset (new Ball (Ball::Color::Red)); break;
+			case 1: ball.reset (new Ball (Ball::Color::Green)); break;
+			case 2: ball.reset (new Ball (Ball::Color::Blue)); break;
+			case 3: ball.reset (new Ball (Ball::Color::Yellow)); break;
+			case 4: ball.reset (new Ball (Ball::Color::Magic)); break;
+			case 5: ball.reset (new Ball (Ball::Color::Bomb)); break;
+			}
+
+			ball->Init ();
+			ball->Scale = Vector2D (0.1f, 0.1f);
+
+			float screenWidth = game.ScreenWidth () / (float) addCount;
+			float screenOffset = i * game.ScreenWidth () / (float) addCount;
+			float border = ball->TransformedBoundingBox ().Width () / 2.0f + game.ToLocal (20 * 4, 0).x;
+			float newX = NextRandom ((int) (screenOffset * 1000.0f), (int) ((screenOffset + screenWidth - 2.0f * border) * 1000.0f)) / 1000.0f + border;
+
+			ball->Pos = Vector2D (newX, ball->TransformedBoundingBox ().Height () / 2.0f);
+
+			shared_ptr<RigidBody2D> body (new RigidBody2D ());
+			body->Mesh = ball;
+			body->Velocity = Vector2D (0, level.startVelocityY);
+			body->Mass = 1.0f; //1 kg
+
+			_fallingBalls.push_back (shared_ptr<FallingBall> (new FallingBall (ball, body)));
+			_lastAddTime = 0;
+		}
+	}
+}
+
 void FallScene::RefreshTouchedBall (shared_ptr<FallingBall> item, float x, float y) {
 	Game& game = Game::Get ();
 	Vector2D curPos = game.ToLocal (x, y);
@@ -446,12 +486,12 @@ void FallScene::RefreshTouchedBall (shared_ptr<FallingBall> item, float x, float
 	}
 }
 
-shared_ptr<RigidBody2D> FallScene::FindCollision (shared_ptr<RigidBody2D> body) {
+shared_ptr<RigidBody2D> FallScene::FindCollision (const RigidBody2D* body) {
 	//Check dragged balls for collision
 	float radius = 0.1f;
 	for (auto& rec : _touchedBalls) {
 		shared_ptr<FallingBall> item = rec.second;
-		if (item->body == body)
+		if (item->body.get () == body)
 			continue;
 
 		Vector2D dist = item->ball->Pos - body->Mesh->Pos;
@@ -462,7 +502,7 @@ shared_ptr<RigidBody2D> FallScene::FindCollision (shared_ptr<RigidBody2D> body) 
 	//Check other falling balls for collision
 	for (size_t i = 0; i < _fallingBalls.size (); ++i) {
 		shared_ptr<FallingBall> item = _fallingBalls[i];
-		if (item->body == body)
+		if (item->body.get () == body)
 			continue;
 
 		Vector2D dist = item->ball->Pos - body->Mesh->Pos;

@@ -15,7 +15,10 @@
 *
 */
 
-#include "../ballfallnative.Shared/SimpleRenderer.h"
+#include "../ballfallnative.Shared/pch.h"
+#include "../ballfallnative.Shared/management/ballfallgame.h"
+#include "../ballfallnative.Android.StaticLibrary/androidutil.h"
+#include "../ballfallnative.Android.StaticLibrary/androidcontentmanager.h"
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "ballfallnative.NativeActivity", __VA_ARGS__))
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "ballfallnative.NativeActivity", __VA_ARGS__))
@@ -47,7 +50,9 @@ struct engine {
 	int32_t height;
 	struct saved_state state;
 
-	std::unique_ptr<SimpleRenderer> mCubeRenderer;
+	std::unique_ptr<AndroidUtil> util;
+	std::unique_ptr<AndroidContentManager> contentManager;
+	std::unique_ptr<BallFallGame> game;
 };
 
 /**
@@ -115,10 +120,18 @@ static int engine_init_display(struct engine* engine) {
 	engine->height = h;
 	engine->state.angle = 0;
 
-	if (!engine->mCubeRenderer)
+	if (!engine->util) {
+		engine->util.reset (new AndroidUtil ());
+	}
+
+	if (!engine->contentManager) {
+		engine->contentManager.reset (new AndroidContentManager (engine->app->activity->vm, engine->app->activity->clazz));
+	}
+
+	if (!engine->game)
 	{
-		engine->mCubeRenderer.reset(new SimpleRenderer());
-		engine->mCubeRenderer->UpdateWindowSize(w, h);
+		engine->game.reset(new BallFallGame (*(engine->util), *(engine->contentManager)));
+		engine->game->Init (w, h);
 	}
 
 	return 0;
@@ -133,7 +146,8 @@ static void engine_draw_frame(struct engine* engine) {
 		return;
 	}
 
-	engine->mCubeRenderer->Draw();
+	engine->game->Update (0);
+	engine->game->Render ();
 
 	eglSwapBuffers(engine->display, engine->surface);
 }

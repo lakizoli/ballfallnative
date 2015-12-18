@@ -37,6 +37,19 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="androidcontentmanager.h" />
+    <ClInclude Include="androidutil.h" />
+    <ClInclude Include="JavaByteArray.h" />
+    <ClInclude Include="JavaObject.h" />
+    <ClInclude Include="JavaString.h" />
+    <ClInclude Include="jniload.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="androidcontentmanager.cpp" />
+    <ClCompile Include="androidutil.cpp" />
+    <ClCompile Include="jniload.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{c65b314a-a413-4a58-9d02-9d622dd5e4e7}</ProjectGuid>
     <Keyword>Android</Keyword>
@@ -164,6 +177,7 @@
       <PrecompiledHeaderFile>..\ballfallnative.Shared\pch.h</PrecompiledHeaderFile>
       <ExceptionHandling>Enabled</ExceptionHandling>
       <CppLanguageStandard>c++11</CppLanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -172,6 +186,7 @@
       <PrecompiledHeaderFile>..\ballfallnative.Shared\pch.h</PrecompiledHeaderFile>
       <ExceptionHandling>Enabled</ExceptionHandling>
       <CppLanguageStandard>c++11</CppLanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -173,6 +173,7 @@
       <CppLanguageStandard>c++11</CppLanguageStandard>
       <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\work\git_repos\ballfallnative\packages\glm.0.9.7.1\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -181,6 +182,7 @@
       <CppLanguageStandard>c++11</CppLanguageStandard>
       <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\work\git_repos\ballfallnative\packages\glm.0.9.7.1\build\native\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

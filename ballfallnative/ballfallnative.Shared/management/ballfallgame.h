@@ -9,8 +9,8 @@ class BallFallGame : public Game {
 public:
 	BallFallGame (IUtil& util, IContentManager& contentManager) : Game (util, contentManager), _fallScene (new FallScene ()) {}
 
-	public override void Init (int width, int height) {
+	virtual void Init (int width, int height) override {
 		Game::Init (width, height);
-		SetCurrentScene (_fallScene);
+		SetCurrentScene (static_pointer_cast<Scene> (_fallScene));
 	}
 };
