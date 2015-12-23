@@ -54,6 +54,7 @@ struct engine {
 	std::unique_ptr<AndroidUtil> util;
 	std::unique_ptr<AndroidContentManager> contentManager;
 	std::unique_ptr<BallFallGame> game;
+	std::unique_ptr<std::set<int32_t>> pointerIDs;
 	double lastUpdateTime;
 };
 
@@ -128,6 +129,10 @@ static int engine_init_display(struct engine* engine) {
 	engine->height = h;
 	engine->state.angle = 0;
 
+	if (!engine->pointerIDs) {
+		engine->pointerIDs.reset (new std::set<int32_t> ());
+	}
+
 	if (!engine->util) {
 		engine->util.reset (new AndroidUtil ());
 	}
@@ -136,8 +141,7 @@ static int engine_init_display(struct engine* engine) {
 		engine->contentManager.reset (new AndroidContentManager (engine->app->activity->vm, engine->app->activity->clazz));
 	}
 
-	if (!engine->game)
-	{
+	if (!engine->game) {
 		engine->game.reset(new BallFallGame (*(engine->util), *(engine->contentManager)));
 		engine->game->Init (w, h);
 	}
@@ -192,8 +196,38 @@ static void engine_term_display(struct engine* engine) {
 static int32_t engine_handle_input(struct android_app* app, AInputEvent* event) {
 	struct engine* engine = (struct engine*)app->userData;
 	if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
-		engine->state.x = AMotionEvent_getX(event, 0);
-		engine->state.y = AMotionEvent_getY(event, 0);
+		//engine->state.x = AMotionEvent_getX(event, 0);
+		//engine->state.y = AMotionEvent_getY(event, 0);
+		//return 1;
+
+		int32_t action = AMotionEvent_getAction (event);
+		int32_t pointerIndex = (action & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+		//LOGD ("OnTouchEvent (Raw) -> action: %d, idx: %d, id: %d, x: %.2f, y: %.2f", action, pointerIndex, AMotionEvent_getPointerId (event, pointerIndex), AMotionEvent_getX (event, pointerIndex), AMotionEvent_getY (event, pointerIndex));
+		if (action == AMOTION_EVENT_ACTION_DOWN || (action & AMOTION_EVENT_ACTION_POINTER_DOWN) == AMOTION_EVENT_ACTION_POINTER_DOWN) {
+			int32_t id = AMotionEvent_getPointerId (event, pointerIndex);
+			if (engine->pointerIDs && engine->pointerIDs->find (id) == engine->pointerIDs->end ()) {
+				//LOGD ("OnTouchEvent (Down) -> idx: %d, id: %d, x: %.2f, y: %.2f", pointerIndex, id, AMotionEvent_getX (event, pointerIndex), AMotionEvent_getY (event, pointerIndex));
+				engine->pointerIDs->insert (id);
+				engine->game->TouchDown (id, AMotionEvent_getX (event, pointerIndex), AMotionEvent_getY (event, pointerIndex));
+			}
+		} else if (action == AMOTION_EVENT_ACTION_UP || (action & AMOTION_EVENT_ACTION_POINTER_UP) == AMOTION_EVENT_ACTION_POINTER_UP) {
+			int32_t id = AMotionEvent_getPointerId (event, pointerIndex);
+			if (engine->pointerIDs && engine->pointerIDs->find (id) != engine->pointerIDs->end ()) {
+				//LOGD ("OnTouchEvent (Up) -> idx: %d, id: %d, x: %.2f, y: %.2f", pointerIndex, id, AMotionEvent_getX (event, pointerIndex), AMotionEvent_getY (event, pointerIndex));
+				engine->pointerIDs->erase (id);
+				engine->game->TouchUp (id, AMotionEvent_getX (event, pointerIndex), AMotionEvent_getY (event, pointerIndex));
+			}
+		} else if (action == AMOTION_EVENT_ACTION_MOVE) {
+			size_t pointerCount = AMotionEvent_getPointerCount (event);
+			for (size_t i = 0; i < pointerCount; ++i) {
+				int32_t id = AMotionEvent_getPointerId (event, i);
+				if (engine->pointerIDs && engine->pointerIDs->find (id) != engine->pointerIDs->end ()) {
+					//LOGD ("OnTouchEvent (Move) -> idx: %d, id: %d, x: %.2f, y: %.2f", pointerIndex, id, AMotionEvent_getX (event, pointerIndex), AMotionEvent_getY (event, pointerIndex));
+					engine->game->TouchMove (id, AMotionEvent_getX (event, i), AMotionEvent_getY (event, i));
+				}
+			}
+		}
+
 		return 1;
 	}
 	return 0;

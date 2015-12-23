@@ -35,6 +35,7 @@
 //Cross platform includes
 #include <vector>
 #include <map>
+#include <set>
 #include <deque>
 #include <array>
 #include <stack>

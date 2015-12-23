@@ -11,6 +11,7 @@
 //3.) trojan horse
 //4.) varfal védelem
 //5.) krakout, traz (C64)
+//5b.) Ugyanaz a bontogatós játék, de úgy, hogy a labdát a fallal kell ütögetni. Tehát a telefon mozgatásával lehet a labdát mindenfelé ütögetni, irányítani... :)
 //6.) hunch back (C64)
 //7.) pörgõ leveleken ugráló béka
 
