@@ -20,6 +20,7 @@
 #include "../ballfallnative.Android.StaticLibrary/androidutil.h"
 #include "../ballfallnative.Android.StaticLibrary/androidcontentmanager.h"
 
+#define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, "ballfallnative.NativeActivity", __VA_ARGS__))
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "ballfallnative.NativeActivity", __VA_ARGS__))
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "ballfallnative.NativeActivity", __VA_ARGS__))
 
@@ -53,7 +54,14 @@ struct engine {
 	std::unique_ptr<AndroidUtil> util;
 	std::unique_ptr<AndroidContentManager> contentManager;
 	std::unique_ptr<BallFallGame> game;
+	double lastUpdateTime;
 };
+
+static double engine_get_current_time () {
+	timespec now;
+	clock_gettime (CLOCK_MONOTONIC, &now);
+	return (double) now.tv_sec + (double) now.tv_nsec / 1e9;
+}
 
 /**
 * Initialize an EGL context for the current display.
@@ -146,7 +154,13 @@ static void engine_draw_frame(struct engine* engine) {
 		return;
 	}
 
-	engine->game->Update (0);
+	double elapsedTime = 0;
+	double currentTime = engine_get_current_time ();
+	if (engine->lastUpdateTime >= 0)
+		elapsedTime = currentTime - engine->lastUpdateTime;
+	engine->lastUpdateTime = currentTime;
+
+	engine->game->Update ((float)elapsedTime);
 	engine->game->Render ();
 
 	eglSwapBuffers(engine->display, engine->surface);
@@ -248,8 +262,8 @@ void android_main(struct android_app* state) {
 
 	// Prepare to monitor accelerometer
 	engine.sensorManager = ASensorManager_getInstance();
-	engine.accelerometerSensor = ASensorManager_getDefaultSensor(engine.sensorManager,
-		ASENSOR_TYPE_ACCELEROMETER);
+	//engine.accelerometerSensor = ASensorManager_getDefaultSensor(engine.sensorManager,
+	//	ASENSOR_TYPE_ACCELEROMETER);
 	engine.sensorEventQueue = ASensorManager_createEventQueue(engine.sensorManager,
 		state->looper, LOOPER_ID_USER, NULL, NULL);
 
@@ -259,6 +273,7 @@ void android_main(struct android_app* state) {
 	}
 
 	engine.animating = 1;
+	engine.lastUpdateTime = -1;
 
 	// loop waiting for stuff to do.
 

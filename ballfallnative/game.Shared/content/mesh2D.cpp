@@ -32,11 +32,14 @@ GLuint Mesh2D::LoadTextureFromAsset (const string& asset) const {
     glGenTextures (1, &texID);
     glBindTexture (GL_TEXTURE_2D, texID);
 
-    //using (var image = Game.ContentManager.LoadImage (asset)) {
-    //    IntPtr pixels = Game.ContentManager.LockPixels (image);
-    //    GL.TexImage2D (All.Texture2D, 0, (int)All.Rgba, Game.ContentManager.GetWidth (image), Game.ContentManager.GetHeight (image), 0, All.Rgba, All.UnsignedByte, pixels);
-    //    Game.ContentManager.UnlockPixels (image);
-    //}
+	IContentManager& contentManager = Game::ContentManager ();
+	Image image = contentManager.LoadImage (asset);
+
+	const uint8_t* pixels = contentManager.LockPixels (image);
+	glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, contentManager.GetWidth (image), contentManager.GetHeight (image), 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLvoid*) pixels);
+	contentManager.UnlockPixels (image);
+
+	contentManager.UnloadImage (image);
 
     glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

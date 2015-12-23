@@ -119,8 +119,14 @@ AndroidContentManager::AndroidContentManager (JavaVM * vm, jobject activity) {
 	jni.mActivity = activity;
 }
 
-inline Image AndroidContentManager::LoadImage (const string & asset) {
+Image AndroidContentManager::LoadImage (const string & asset) {
 	return (Image) loadBitmap (asset);
+}
+
+void AndroidContentManager::UnloadImage (Image& image) {
+	jobject jimg = (jobject) image;
+	JNI::ReleaseLocalReferencedObject (jimg);
+	image = nullptr;
 }
 
 const uint8_t * AndroidContentManager::LockPixels (Image image) {
@@ -133,13 +139,13 @@ void AndroidContentManager::UnlockPixels (Image image) {
 	AndroidBitmap_unlockPixels (JNI::GetEnv (), (jobject) image);
 }
 
-int AndroidContentManager::GetWidth (Image image) {
+int AndroidContentManager::GetWidth (const Image image) const {
 	AndroidBitmapInfo info;
 	AndroidBitmap_getInfo (JNI::GetEnv (), (jobject) image, &info);
 	return (int) info.width;
 }
 
-int AndroidContentManager::GetHeight (Image image) {
+int AndroidContentManager::GetHeight (const Image image) const {
 	AndroidBitmapInfo info;
 	AndroidBitmap_getInfo (JNI::GetEnv (), (jobject) image, &info);
 	return (int) info.height;

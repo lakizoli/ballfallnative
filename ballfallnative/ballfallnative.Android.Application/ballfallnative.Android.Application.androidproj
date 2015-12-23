@@ -111,6 +111,19 @@
     </AntPackage>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Content Include="assets\background.png" />
+    <Content Include="assets\ball_blue.png" />
+    <Content Include="assets\ball_green.png" />
+    <Content Include="assets\ball_magic.png" />
+    <Content Include="assets\ball_red.png" />
+    <Content Include="assets\ball_yellow.png" />
+    <Content Include="assets\bomb.png" />
+    <Content Include="assets\explosion.png" />
+    <Content Include="assets\fail.png" />
+    <Content Include="assets\font.ttf" />
+    <Content Include="assets\go.png" />
+    <Content Include="assets\ready.png" />
+    <Content Include="assets\steady.png" />
     <Content Include="res\values\strings.xml" />
     <AntBuildXml Include="build.xml" />
     <AndroidManifest Include="AndroidManifest.xml" />

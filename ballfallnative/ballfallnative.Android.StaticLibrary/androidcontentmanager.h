@@ -7,10 +7,12 @@ public:
 	AndroidContentManager (JavaVM* vm, jobject activity);
 
 	virtual Image LoadImage (const string & asset) override;
+	virtual void UnloadImage (Image& image) override;
+
 	virtual const uint8_t * LockPixels (Image image) override;
 	virtual void UnlockPixels (Image image) override;
-	virtual int GetWidth (Image image) override;
-	virtual int GetHeight (Image image) override;
+	virtual int GetWidth (const Image image) const override;
+	virtual int GetHeight (const Image image) const override;
 
 	virtual void SetTopLeftStyle (float size, float red, float green, float blue, float alpha) override;
 	virtual void SetTopRightStyle (float size, float red, float green, float blue, float alpha) override;
