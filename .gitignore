@@ -211,3 +211,13 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 *.opendb
+/.workspace
+/ballfallnative/ballfallnative.Android.Application/.settings
+/ballfallnative/ballfallnative.Android.StaticLibrary/.settings
+/ballfallnative/ballfallnative.Android.StaticLibrary/.project
+/ballfallnative/ballfallnative.Android.StaticLibrary/.classpath
+/ballfallnative/ballfallnative.Android.NativeActivity/.settings
+/ballfallnative/ballfallnative.Android.NativeActivity/.project
+/ballfallnative/ballfallnative.Android.NativeActivity/.classpath
+/ballfallnative/ballfallnative.Android.Application/.project
+/ballfallnative/ballfallnative.Android.Application/.classpath

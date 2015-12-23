@@ -8,7 +8,7 @@ class JNI
 	friend JavaVM* GetJavaVM ();
 	friend JNIEnv* GetEnv ();
 	friend jclass FindClass (const char* signature);
-	friend JNIEXPORT jint JNICALL ::JNI_OnLoad (JavaVM* vm, void* reserved);
+	friend JNIEXPORT jint JNICALL::JNI_OnLoad (JavaVM* vm, void* reserved);
 	friend JNIEXPORT void ::JNI_OnUnload (JavaVM* vm, void* reserved);
 
 	JavaVM* javaVM;
@@ -70,8 +70,8 @@ class JNI
 
 		JNIEnv* env = GetEnv ();
 
-		AutoLocalRef<jclass> bimxClass (env->FindClass ("android/app/Activity"), "JNI::Init () - bimxClass");
-		CHECKMSG (bimxClass != nullptr, "cannot find java class: 'android/app/Activity'");
+		AutoLocalRef<jclass> gameClass (env->FindClass ("com/ballfallnative/GameAcitivity"), "JNI::Init () - gameClass");
+		CHECKMSG (gameClass != nullptr, "cannot find java class: 'com/ballfallnative/GameAcitivity'");
 
 		AutoLocalRef<jclass> classClass (env->FindClass ("java/lang/Class"), "JNI::Init () - classClass");
 		CHECKMSG (classClass != nullptr, "cannot find java class: 'java/lang/Class'");
@@ -84,7 +84,7 @@ class JNI
 		jmethodID getClassLoaderMethod = env->GetMethodID (classClass, "getClassLoader", "()Ljava/lang/ClassLoader;");
 		CHECKMSG (getClassLoaderMethod != nullptr, "cannot find java method: 'ClassLoader Class.getClassLoader ()'");
 
-		AutoLocalRef<jobject> classLoaderInstanceLocalRef (env->CallObjectMethod (bimxClass, getClassLoaderMethod), "JNI::Init () - classLoaderInstanceLocalRef");
+		AutoLocalRef<jobject> classLoaderInstanceLocalRef (env->CallObjectMethod (gameClass, getClassLoaderMethod), "JNI::Init () - classLoaderInstanceLocalRef");
 		CHECKMSG (classLoaderInstanceLocalRef != nullptr, "cannot find java instance of class: 'java/lang/ClassLoader'");
 
 		classLoaderInstance = GlobalReferenceObject (classLoaderInstanceLocalRef.get (), "cannot reference java instance of class: 'java/lang/ClassLoader'");
@@ -342,3 +342,33 @@ string StrError (int errnum)
 }
 
 } //namespace JNI
+
+/**
+* @brief The module load event handler (called once, when the dynamic library loaded)
+*
+* @param vm The reference for the Java virtual machine.
+* @param reserved Reserved by the Java virtual machine.
+*
+* @return The version of the used JNI protocol.
+*/
+JNIEXPORT jint JNICALL JNI_OnLoad (JavaVM* vm, void* reserved) {
+	//Init JNI layer
+	JNI::JNI& jni = JNI::JNI::Get ();
+	jni.Init (vm);
+
+	//Init BIMx specific stuffs
+	//...
+
+	return JNI_VERSION_1_6;
+}
+
+/**
+* @brief The module unload event handler.
+*
+* @param vm The reference for the Java virtual machine.
+* @param reserved Reserved by the Java virtual machine.
+*/
+JNIEXPORT void JNI_OnUnload (JavaVM* vm, void* reserved) {
+	//Destroy BIMx specific stuffs
+	//...
+}
