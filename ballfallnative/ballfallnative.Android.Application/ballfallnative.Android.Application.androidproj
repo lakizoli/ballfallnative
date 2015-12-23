@@ -137,9 +137,6 @@
   <ItemGroup>
     <JavaCompile Include="src\com\ballfallnative\GameAcitivity.java" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="libs\" />
-  </ItemGroup>
   <Import Project="$(AndroidTargetsPath)\Android.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>
