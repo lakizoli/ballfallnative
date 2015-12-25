@@ -25,6 +25,8 @@ class JNI_ContentManager {
 		mSetTopRightStyleMethod (nullptr),
 		mSetTopLeftStatusMethod (nullptr),
 		mSetTopRightStatusMethod (nullptr),
+		mReadFileMethod (nullptr),
+		mWriteFileMethod (nullptr),
 		mActivity (nullptr) {
 	}
 
@@ -77,6 +79,8 @@ class JNI_ContentManager {
 		mSetTopRightStyleMethod = JNI::GetMethod (clazzActivity, "setTopRightStyle", "(FFFFF)V");
 		mSetTopLeftStatusMethod = JNI::GetMethod (clazzActivity, "setTopLeftStatus", "(Ljava/lang/String;)V");
 		mSetTopRightStatusMethod = JNI::GetMethod (clazzActivity, "setTopRightStatus", "(Ljava/lang/String;)V");
+		mReadFileMethod = JNI::GetMethod (clazzActivity, "readFile", "(Ljava/lang/String;)Ljava/lang/String;");
+		mWriteFileMethod = JNI::GetMethod (clazzActivity, "writeFile", "(Ljava/lang/String;Ljava/lang/String;)V");
 	}
 
 	void Release () {
@@ -105,6 +109,9 @@ class JNI_ContentManager {
 		mSetTopRightStyleMethod = nullptr;
 		mSetTopLeftStatusMethod = nullptr;
 		mSetTopRightStatusMethod = nullptr;
+
+		mReadFileMethod = nullptr;
+		mWriteFileMethod = nullptr;
 	}
 
 	//private:
@@ -123,6 +130,8 @@ class JNI_ContentManager {
 	jmethodID mSetTopRightStyleMethod;
 	jmethodID mSetTopLeftStatusMethod;
 	jmethodID mSetTopRightStatusMethod;
+	jmethodID mReadFileMethod;
+	jmethodID mWriteFileMethod;
 
 	jobject mActivity; ///< The java instance of the Activity.
 };
@@ -203,6 +212,19 @@ void AndroidContentManager::SetTopRightStatus (const string & text) {
 	JNIEnv* env = JNI::GetEnv ();
 	env->CallVoidMethod (jni.mActivity, jni.mSetTopRightStatusMethod, JavaString (text).get ());
 	CHECKARG (!env->ExceptionCheck (), "Cannot set top right status, Java exception occured!");
+}
+
+string AndroidContentManager::ReadFile (const string& fileName) const {
+	JNI_ContentManager& jni = JNI_ContentManager::Get ();
+	JavaString&& jstr = JNI::CallObjectMethod<JavaString> (jni.mActivity, jni.mReadFileMethod, JavaString (fileName).get ());
+	return jstr.getString ();
+}
+
+void AndroidContentManager::WriteFile (const string& fileName, const string& content) {
+	JNI_ContentManager& jni = JNI_ContentManager::Get ();
+	JNIEnv* env = JNI::GetEnv ();
+	env->CallVoidMethod (jni.mActivity, jni.mWriteFileMethod, JavaString (fileName).get (), JavaString (content).get ());
+	CHECKARG (!env->ExceptionCheck (), "Cannot write file, Java exception occured!");
 }
 
 jobject AndroidContentManager::openAsset (const string & asset) const {

@@ -22,6 +22,9 @@ public:
 	virtual void SetTopLeftStatus (const string & text) override;
 	virtual void SetTopRightStatus (const string & text) override;
 
+	virtual string ReadFile (const string& fileName) const override;
+	virtual void WriteFile (const string& fileName, const string& content) override;
+
 private:
 	jobject openAsset (const string& asset) const;
 	void closeStream (jobject istream) const;

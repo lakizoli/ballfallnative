@@ -126,6 +126,16 @@
     <Content Include="assets\go.png" />
     <Content Include="assets\menu_background.png" />
     <Content Include="assets\ready.png" />
+    <Content Include="assets\score0.png" />
+    <Content Include="assets\score1.png" />
+    <Content Include="assets\score2.png" />
+    <Content Include="assets\score3.png" />
+    <Content Include="assets\score4.png" />
+    <Content Include="assets\score5.png" />
+    <Content Include="assets\score6.png" />
+    <Content Include="assets\score7.png" />
+    <Content Include="assets\score8.png" />
+    <Content Include="assets\score9.png" />
     <Content Include="assets\start_new_game.png" />
     <Content Include="assets\steady.png" />
     <Content Include="res\values\strings.xml" />

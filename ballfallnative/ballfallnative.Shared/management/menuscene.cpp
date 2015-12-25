@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "menuscene.h"
 #include "fallscene.h"
-#include "management/game.h"
+#include "ballfallgame.h"
 
 void MenuScene::Init (int width, int height) {
-	Game& game = Game::Get ();
+	BallFallGame& game = (BallFallGame&) Game::Get ();
 
 	_background.reset (new ImageMesh ("menu_background.png"));
 	_background->Init ();
@@ -19,10 +19,29 @@ void MenuScene::Init (int width, int height) {
 	_start->Pos = game.ToLocal (0, 235 * 4) + Vector2D (screenSize.x / 2.0f, 0);
 	_start->Scale = game.ToLocal (350 * 4, 50 * 4) / _start->boundingBox.Size ();
 
-	//TODO: read score from file...
-	_lastHighScore = 0;
+	game.ReadGameState ();
+	_lastHighScore = game.State ().highScore;
 
-	//TODO: high score kiirasa...
+	stringstream ss;
+	ss << _lastHighScore;
+	string highScore = ss.str ();
+
+	Vector2D charSize (32 * 4, 37 * 4);
+	for (size_t i = 0; i < highScore.size ();++i) {
+		char ch = highScore[i];
+
+		stringstream ssNum;
+		ssNum << "score" << ch << ".png";
+
+		shared_ptr<ImageMesh> mesh (new ImageMesh (ssNum.str ()));
+		mesh->Init ();
+
+		float charX = (float)i * charSize.x - charSize.x * (float) highScore.size () / 2.0f + 15 * 4;
+		mesh->Pos = game.ToLocal (charX, 390 * 4) + Vector2D (screenSize.x / 2.0f, 0);
+		mesh->Scale = game.ToLocal (charSize.x, charSize.y) / mesh->boundingBox.Size ();
+
+		_score.push_back (mesh);
+	}
 
 	_startRegion = Rect2D (game.ToLocal (24 * 4, 220 * 4), game.ToLocal (260 * 4, 255 * 4));
 	_startPressed = false;
@@ -33,6 +52,10 @@ void MenuScene::Init (int width, int height) {
 
 void MenuScene::Shutdown () {
 	_startPressed = false;
+
+	for (shared_ptr<ImageMesh> num : _score)
+		num->Shutdown ();
+	_score.clear ();
 
 	_start->Shutdown ();
 	_start.reset ();
@@ -67,6 +90,9 @@ void MenuScene::Render () {
 
 	_background->Render ();
 	_start->Render ();
+
+	for (shared_ptr<ImageMesh> num : _score)
+		num->Render ();
 }
 
 void MenuScene::TouchDown (int fingerID, float x, float y) {

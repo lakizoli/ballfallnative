@@ -20,4 +20,7 @@ public:
 
 	virtual void SetTopLeftStatus (const string& text) = 0;
 	virtual void SetTopRightStatus (const string& text) = 0;
+
+	virtual string ReadFile (const string& fileName) const = 0;
+	virtual void WriteFile (const string& fileName, const string& content) = 0;
 };

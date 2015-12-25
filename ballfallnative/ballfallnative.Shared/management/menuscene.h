@@ -11,6 +11,7 @@ private:
 private:
 	shared_ptr<ImageMesh> _background;
 	shared_ptr<ImageMesh> _start;
+	vector<shared_ptr<ImageMesh>> _score;
 	int _lastHighScore;
 
 	Rect2D _startRegion;

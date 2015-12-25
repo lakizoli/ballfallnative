@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "fallscene.h"
 #include "menuscene.h"
+#include "ballfallgame.h"
 
 void FallScene::Init (int width, int height) {
 	Game& game = Game::Get ();
@@ -424,7 +425,12 @@ void FallScene::TouchUp (int fingerID, float x, float y) {
 			contentManager.SetTopLeftStatus ("");
 			contentManager.SetTopRightStatus ("");
 
-			Game& game = Game::Get ();
+			BallFallGame& game = (BallFallGame&) Game::Get ();
+			if (_score > game.State ().highScore) {
+				game.State ().highScore = _score;
+				game.SaveGameState ();
+			}
+
 			game.SetCurrentScene (shared_ptr<Scene> (new MenuScene ()));
 			return;
 		}

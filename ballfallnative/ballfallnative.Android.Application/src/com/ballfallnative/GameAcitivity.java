@@ -10,6 +10,7 @@ import android.graphics.*;
 import android.graphics.drawable.*;
 import android.widget.*;
 import android.util.*;
+import java.io.*;
 import com.google.android.gms.ads.*;
 
 public class GameAcitivity extends NativeActivity {
@@ -156,6 +157,52 @@ public class GameAcitivity extends NativeActivity {
 				_textTopRight.setText (text);
 			}
 		});
+	}
+
+	public String readFile (String fileName) {
+		String content = "";
+		FileInputStream inputStream = null;
+		try {
+			inputStream = openFileInput (fileName);
+
+			StringBuffer fileContent = new StringBuffer("");
+			byte[] buffer = new byte[1024];
+
+			int n = 0;
+			while ((n = inputStream.read(buffer)) != -1) { 
+				fileContent.append(new String(buffer, 0, n)); 
+			}
+
+			content = fileContent.toString ();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (inputStream != null)
+					inputStream.close ();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return content;
+	}
+
+	public void writeFile (String fileName, String content) {
+		FileOutputStream outputStream = null;
+		try {
+			outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+			outputStream.write(content.getBytes());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (outputStream != null)
+					outputStream.close ();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private PopupWindow createOverlay (Context context, int width, int height, int offsetX, int offsetY, View overlayView, int gravity, int padLeft, int padTop, int padRight, int padBottom) {
