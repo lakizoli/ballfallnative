@@ -33,12 +33,26 @@ void FallScene::Init (int width, int height) {
 	_steady = nullptr;
 	_go = nullptr;
 
-	_background.reset (new ImageMesh ("background.png"));
-	_background->Init ();
+	_background_idx = 0;
+
+	_background_1.reset (new ImageMesh ("background.png"));
+	_background_1->Init ();
+
+	_background_2.reset (new ImageMesh ("background_1.png"));
+	_background_2->Init ();
+
+	_foreground.reset (new ImageMesh ("foreground.png"));
+	_foreground->Init ();
 
 	Vector2D screenSize = game.ToLocal (width, height);
-	_background->Pos = screenSize / 2.0f;
-	_background->Scale = screenSize / _background->boundingBox.Size ();
+	_background_1->Pos = screenSize / 2.0f;
+	_background_1->Scale = screenSize / _background_1->boundingBox.Size ();
+
+	_background_2->Pos = screenSize / 2.0f;
+	_background_2->Scale = screenSize / _background_2->boundingBox.Size ();
+
+	_foreground->Pos = screenSize / 2.0f;
+	_foreground->Scale = screenSize / _foreground->boundingBox.Size ();
 
 	IContentManager& contentManager = Game::ContentManager ();
 	contentManager.SetTopLeftStyle (20, 1, 0, 0, 1);
@@ -70,7 +84,9 @@ void FallScene::Shutdown () {
 		_fail->Shutdown ();
 	}
 
-	_background->Shutdown ();
+	_foreground->Shutdown ();
+	_background_2->Shutdown ();
+	_background_1->Shutdown ();
 
 	for (shared_ptr<QTEExplodeBall> item : _explodedBalls) {
 		item->Stop ();
@@ -98,7 +114,9 @@ void FallScene::Shutdown () {
 }
 
 void FallScene::Resize (int oldWidth, int oldHeight, int newWidth, int newHeight) {
-	_background->Scale = _background->boundingBox.Size () / Game::Get ().ToLocal (newWidth, newHeight);
+	_foreground->Scale = _foreground->boundingBox.Size () / Game::Get ().ToLocal (newWidth, newHeight);
+	_background_1->Scale = _background_1->boundingBox.Size () / Game::Get ().ToLocal (newWidth, newHeight);
+	_background_2->Scale = _background_2->boundingBox.Size () / Game::Get ().ToLocal (newWidth, newHeight);
 }
 
 void FallScene::Update (float elapsedTime) {
@@ -168,6 +186,9 @@ void FallScene::Update (float elapsedTime) {
 	}
 
 	const LevelDefinition& level = _levels[_currentLevel];
+
+	//Calculate background index
+	_background_idx = (int) fmodf (_fullTime, 2.0);
 
 	//Add new ball to the system
 	AddNewBalls (level);
@@ -271,13 +292,17 @@ void FallScene::Update (float elapsedTime) {
 }
 
 void FallScene::Render () {
-	glClearColor (1.0f, 0.5f, 0.5f, 1.0f);
+	//glClearColor (1.0f, 0.5f, 0.5f, 1.0f);
+	glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
 	glClear (GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
 
-	_background->Render ();
+	if (_background_idx == 0)
+		_background_1->Render ();
+	else
+		_background_2->Render ();
 
 	//Draw falling balls
 	for (shared_ptr<FallingBall> item : _fallingBalls)
@@ -294,6 +319,8 @@ void FallScene::Render () {
 	//Draw wrong balls
 	for (shared_ptr<QTEGoodBall> item : _wrongBalls)
 		item->Render ();
+
+	_foreground->Render ();
 
 	//Draw exploded balls
 	for (shared_ptr<QTEExplodeBall> item : _explodedBalls)
@@ -568,20 +595,22 @@ void FallScene::HandleBallFallFailEnd () {
 }
 
 void FallScene::RefreshOverlays (bool force) {
-	int mins = (int) (_fullTime / 60.0f);
-	int secs = (int) (fmodf (_fullTime, 60.0f));
-	if (force || mins != _lastMins || secs != _lastSecs) {
-		_lastMins = mins;
-		_lastSecs = secs;
+	if (_state == State::Game) {
+		int mins = (int) (_fullTime / 60.0f);
+		int secs = (int) (fmodf (_fullTime, 60.0f));
+		if (force || mins != _lastMins || secs != _lastSecs) {
+			_lastMins = mins;
+			_lastSecs = secs;
 
-		IContentManager& contentManager = Game::ContentManager ();
+			IContentManager& contentManager = Game::ContentManager ();
 
-		stringstream ssTopLeft;
-		ssTopLeft << "Level: " << (_currentLevel + 1) << " Time: " << setw (2) << setfill ('0') << mins << ":" << setw (2) << setfill ('0') << secs;
-		contentManager.SetTopLeftStatus (ssTopLeft.str ());
+			stringstream ssTopLeft;
+			ssTopLeft << "Level: " << (_currentLevel + 1) << " Time: " << setw (2) << setfill ('0') << mins << ":" << setw (2) << setfill ('0') << secs;
+			contentManager.SetTopLeftStatus (ssTopLeft.str ());
 
-		stringstream ssTopRight;
-		ssTopRight << "Score: " << _score;
-		contentManager.SetTopRightStatus (ssTopRight.str ());
+			stringstream ssTopRight;
+			ssTopRight << "Score: " << _score;
+			contentManager.SetTopRightStatus (ssTopRight.str ());
+		}
 	}
 }

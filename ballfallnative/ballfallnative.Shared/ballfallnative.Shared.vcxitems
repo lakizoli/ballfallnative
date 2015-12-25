@@ -22,14 +22,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)content\qte_pulseball.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)management\ballfallgame.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)management\fallscene.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)MathHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)SimpleRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)content\ball.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)content\imagemesh.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)management\fallscene.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)SimpleRenderer.cpp" />
   </ItemGroup>
 </Project>

@@ -112,6 +112,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Content Include="assets\background.png" />
+    <Content Include="assets\background_1.png" />
     <Content Include="assets\ball_blue.png" />
     <Content Include="assets\ball_green.png" />
     <Content Include="assets\ball_magic.png" />
@@ -121,6 +122,7 @@
     <Content Include="assets\explosion.png" />
     <Content Include="assets\fail.png" />
     <Content Include="assets\font.ttf" />
+    <Content Include="assets\foreground.png" />
     <Content Include="assets\go.png" />
     <Content Include="assets\ready.png" />
     <Content Include="assets\steady.png" />

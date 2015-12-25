@@ -69,9 +69,12 @@ private:
 	vector<shared_ptr<QTEGoodBall>> _endedBalls;
 	vector<shared_ptr<QTEGoodBall>> _wrongBalls;
 	vector<shared_ptr<QTEExplodeBall>> _explodedBalls;
-	shared_ptr<ImageMesh> _background;
+	shared_ptr<ImageMesh> _background_1;
+	shared_ptr<ImageMesh> _background_2;
+	shared_ptr<ImageMesh> _foreground;
 	shared_ptr<QTEGrowText> _fail;
 	State _state;
+	int _background_idx;
 
 	map<int, shared_ptr<FallingBall>> _touchedBalls;
 
