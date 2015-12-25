@@ -8,12 +8,14 @@
 //Játék öletek:
 //1.) ballfall: leesõ labdák válogatása különbözõ színû csövekbe (vagy allatok etetese)
 //2.) dekázo játék: egy labdát kell dekázni mindenféle szélben, esõben, ill. különbözõ skill-ek gesture függõen stb...
-//3.) trojan horse
-//4.) varfal védelem
+//3.) trojan horse (nintendo handheld)
+//4.) varfal védelem (nintendo handheld)
 //5.) krakout, traz (C64) (krakout már van android-ra, és szép is sajnos...) TRAZ még nincs...
 //5b.) Ugyanaz a bontogatós játék, de úgy, hogy a labdát a fallal kell ütögetni. Tehát a telefon mozgatásával lehet a labdát mindenfelé ütögetni, irányítani... :)
 //6.) hunch back (C64) (Már van egy régi átirat, de szerintem én jobbat fogok csinálni..., viszont iOS-en van egy nagyon király :( )
 //7.) pörgõ leveleken ugráló béka
+//8.) Aknakeresõ különbözõ alakú pályákkal... (be kellene már fejezni)
+//9.) Tangoes játék (fajáték)
 
 /// Base class of the game.
 class Game {
