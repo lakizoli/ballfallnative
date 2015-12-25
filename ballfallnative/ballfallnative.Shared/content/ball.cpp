@@ -1,6 +1,21 @@
 #include "pch.h"
 #include "ball.h"
 
+const char* Ball::TypeAsString () const {
+	switch (mColor) {
+	case Color::Red: return "red";
+	case Color::Green: return "green";
+	case Color::Blue: return "blue";
+	case Color::Yellow: return "yellow";
+	case Color::Magic: return "magic";
+	case Color::Bomb: return "bomb";
+	default:
+		assert (nullptr); //Not implemented
+	}
+
+	return "unknown";
+}
+
 void Ball::Init () {
 	Mesh2D::Init ();
 
@@ -10,8 +25,8 @@ void Ball::Init () {
 	case Color::Green: asset = "ball_green.png"; break;
 	case Color::Blue: asset = "ball_blue.png"; break;
 	case Color::Yellow: asset = "ball_yellow.png"; break;
-	case Color::Magic: asset = "ball_magic.png"; break; //TODO: magic-rõl az árnyék leszedése
-	case Color::Bomb: asset = "bomb.png"; break; //TODO: bomb-ról az árnyék leszedése
+	case Color::Magic: asset = "ball_magic.png"; break;
+	case Color::Bomb: asset = "bomb.png"; break;
 	default:
 		assert (nullptr); //Not implemented
 	}

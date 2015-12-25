@@ -17,8 +17,8 @@ public class GameAcitivity extends NativeActivity {
 
 	private PopupWindow _topLeftOverlay;
 	private PopupWindow _topRightOverlay;
-	private TextView _textTopRight;
-	private TextView _textTopLeft;
+	private StrokedTextView _textTopRight;
+	private StrokedTextView _textTopLeft;
 
 	private PopupWindow _adOverlay;
 	private AdView _adView;
@@ -49,15 +49,15 @@ public class GameAcitivity extends NativeActivity {
 		setContentView(_mainLayout, params);
 
 		//Setup game overlays
-		_textTopRight = new TextView(this);
+		_textTopRight = new StrokedTextView(this);
 		_textTopRight.setText("");
 
-		_textTopLeft = new TextView(this);
+		_textTopLeft = new StrokedTextView(this);
 		_textTopLeft.setText("");
 
 		Typeface tf = Typeface.createFromAsset(getAssets(), "font.ttf");
-		_textTopRight.setTypeface(tf, Typeface.NORMAL);
-		_textTopLeft.setTypeface(tf, Typeface.NORMAL);
+		_textTopRight.setProperties (tf, new byte[]{ (byte)255, (byte)92, (byte)16, (byte)16 }, convertDpToPixel (5), new byte[]{ (byte)255, (byte)255, 0, 0 });
+		_textTopLeft.setProperties (tf, new byte[]{ (byte)255, (byte)92, (byte)16, (byte)16 }, convertDpToPixel (5), new byte[]{ (byte)255, (byte)255, 0, 0 });
 
 		//Setup adMob overlay
 		_adView = new AdView(this);
@@ -98,7 +98,7 @@ public class GameAcitivity extends NativeActivity {
 					_adOverlay = createOverlay (activity, 320, 50, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
 
 				if (_topLeftOverlay == null)
-					_topLeftOverlay = createOverlay (activity, 320, 50, 0, 50, _textTopLeft, Gravity.TOP | Gravity.LEFT, 5, 0, 5, 0);
+					_topLeftOverlay = createOverlay (activity, 320, 50, 0, 55, _textTopLeft, Gravity.TOP | Gravity.LEFT, 5, 0, 5, 0);
 
 				_textTopLeft.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
 
@@ -118,7 +118,7 @@ public class GameAcitivity extends NativeActivity {
 			@Override
 			public void run() {
 				if (_topRightOverlay == null)
-					_topRightOverlay = createOverlay (activity, 320, 50, 0, 50, _textTopRight, Gravity.TOP | Gravity.RIGHT, 5, 0, 5, 0);
+					_topRightOverlay = createOverlay (activity, 320, 50, 0, 55, _textTopRight, Gravity.TOP | Gravity.RIGHT, 5, 0, 5, 0);
 
 				_textTopRight.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
 

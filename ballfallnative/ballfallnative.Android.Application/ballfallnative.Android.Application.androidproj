@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <JavaCompile Include="src\com\ballfallnative\GameAcitivity.java" />
+    <JavaCompile Include="src\com\ballfallnative\StrokedTextView.java" />
   </ItemGroup>
   <Import Project="$(AndroidTargetsPath)\Android.targets" />
   <ImportGroup Label="ExtensionTargets" />

@@ -23,6 +23,8 @@ public:
 		return mColor;
 	}
 
+	const char* TypeAsString () const;
+
 public:
 	Ball (Color color) : mColor (color) {}
 

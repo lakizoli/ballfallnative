@@ -483,11 +483,10 @@ void FallScene::AddNewBalls (const LevelDefinition & level) {
 void FallScene::RefreshTouchedBall (shared_ptr<FallingBall> item, float x, float y) {
 	Game& game = Game::Get ();
 	Vector2D curPos = game.ToLocal (x, y);
-	if (item->ball->Pos != curPos) {
+	float elapsedTime = _fullTime - item->lastTouch;
+	if (item->ball->Pos != curPos && elapsedTime > 0) {
 		item->body->LastPos = item->ball->Pos;
 		item->ball->Pos = curPos;
-
-		float elapsedTime = _fullTime - item->lastTouch;
 		item->lastTouch = _fullTime;
 
 		Vector2D dist = item->ball->Pos - item->body->LastPos;
