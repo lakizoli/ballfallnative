@@ -9,6 +9,8 @@ void MenuScene::Init (int width, int height) {
 	_background.reset (new ImageMesh ("menu_background.png"));
 	_background->Init ();
 
+	Vector2D refScale = Vector2D (width, height) / Vector2D (1440, 2392);
+
 	Vector2D screenSize = game.ToLocal (width, height);
 	_background->Pos = screenSize / 2.0f;
 	_background->Scale = screenSize / _background->boundingBox.Size ();
@@ -16,8 +18,8 @@ void MenuScene::Init (int width, int height) {
 	_start.reset (new ImageMesh ("start_new_game.png"));
 	_start->Init ();
 
-	_start->Pos = game.ToLocal (0, 235 * 4) + Vector2D (screenSize.x / 2.0f, 0);
-	_start->Scale = game.ToLocal (350 * 4, 50 * 4) / _start->boundingBox.Size ();
+	_start->Pos = game.ToLocal (0, 235 * 4) * refScale + Vector2D (screenSize.x / 2.0f, 0);
+	_start->Scale = game.ToLocal (350 * 4, 50 * 4) * refScale / _start->boundingBox.Size ();
 
 	game.ReadGameState ();
 	_lastHighScore = game.State ().highScore;
@@ -37,13 +39,13 @@ void MenuScene::Init (int width, int height) {
 		mesh->Init ();
 
 		float charX = (float)i * charSize.x - charSize.x * (float) highScore.size () / 2.0f + 15 * 4;
-		mesh->Pos = game.ToLocal (charX, 390 * 4) + Vector2D (screenSize.x / 2.0f, 0);
-		mesh->Scale = game.ToLocal (charSize.x, charSize.y) / mesh->boundingBox.Size ();
+		mesh->Pos = game.ToLocal (charX, 390 * 4) * refScale + Vector2D (screenSize.x / 2.0f, 0);
+		mesh->Scale = game.ToLocal (charSize.x, charSize.y) * refScale / mesh->boundingBox.Size ();
 
 		_score.push_back (mesh);
 	}
 
-	_startRegion = Rect2D (game.ToLocal (24 * 4, 220 * 4), game.ToLocal (260 * 4, 255 * 4));
+	_startRegion = Rect2D (game.ToLocal (24 * 4, 220 * 4) * refScale, game.ToLocal (260 * 4, 255 * 4) * refScale);
 	_startPressed = false;
 	_startInPressedState = false;
 
