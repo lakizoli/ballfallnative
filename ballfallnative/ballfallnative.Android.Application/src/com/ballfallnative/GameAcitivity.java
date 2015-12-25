@@ -88,7 +88,7 @@ public class GameAcitivity extends NativeActivity {
 		super.onDestroy();
 	}
 
-	public void setTopLeftStyle(final float size, final float red, final float green, final float blue, final float alpha) {
+	public void initAdMob () {
 		final GameAcitivity activity = this;
 
 		runOnUiThread(new Runnable() {
@@ -96,7 +96,16 @@ public class GameAcitivity extends NativeActivity {
 			public void run() {
 				if (_adOverlay == null)
 					_adOverlay = createOverlay (activity, 320, 50, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
+			}
+		});
+	}
 
+	public void setTopLeftStyle(final float size, final float red, final float green, final float blue, final float alpha) {
+		final GameAcitivity activity = this;
+
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
 				if (_topLeftOverlay == null)
 					_topLeftOverlay = createOverlay (activity, 320, 50, 0, 55, _textTopLeft, Gravity.TOP | Gravity.LEFT, 5, 0, 5, 0);
 

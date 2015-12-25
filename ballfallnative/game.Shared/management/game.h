@@ -10,9 +10,9 @@
 //2.) dekázo játék: egy labdát kell dekázni mindenféle szélben, esõben, ill. különbözõ skill-ek gesture függõen stb...
 //3.) trojan horse
 //4.) varfal védelem
-//5.) krakout, traz (C64)
+//5.) krakout, traz (C64) (krakout már van android-ra, és szép is sajnos...) TRAZ még nincs...
 //5b.) Ugyanaz a bontogatós játék, de úgy, hogy a labdát a fallal kell ütögetni. Tehát a telefon mozgatásával lehet a labdát mindenfelé ütögetni, irányítani... :)
-//6.) hunch back (C64)
+//6.) hunch back (C64) (Már van egy régi átirat, de szerintem én jobbat fogok csinálni..., viszont iOS-en van egy nagyon király :( )
 //7.) pörgõ leveleken ugráló béka
 
 /// Base class of the game.

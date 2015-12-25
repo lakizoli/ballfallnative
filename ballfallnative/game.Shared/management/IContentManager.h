@@ -13,6 +13,8 @@ public:
 	virtual int GetWidth (const Image image) const = 0;
 	virtual int GetHeight (const Image image) const = 0;
 
+	virtual void InitAdMob () const = 0;
+
 	virtual void SetTopLeftStyle (float size, float red, float green, float blue, float alpha) = 0;
 	virtual void SetTopRightStyle (float size, float red, float green, float blue, float alpha) = 0;
 

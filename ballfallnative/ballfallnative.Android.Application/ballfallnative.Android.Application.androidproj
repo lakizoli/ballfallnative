@@ -124,7 +124,9 @@
     <Content Include="assets\font.ttf" />
     <Content Include="assets\foreground.png" />
     <Content Include="assets\go.png" />
+    <Content Include="assets\menu_background.png" />
     <Content Include="assets\ready.png" />
+    <Content Include="assets\start_new_game.png" />
     <Content Include="assets\steady.png" />
     <Content Include="res\values\strings.xml" />
     <AntBuildXml Include="build.xml" />

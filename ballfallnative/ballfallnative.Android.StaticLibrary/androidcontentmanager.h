@@ -14,6 +14,8 @@ public:
 	virtual int GetWidth (const Image image) const override;
 	virtual int GetHeight (const Image image) const override;
 
+	virtual void InitAdMob () const override;
+
 	virtual void SetTopLeftStyle (float size, float red, float green, float blue, float alpha) override;
 	virtual void SetTopRightStyle (float size, float red, float green, float blue, float alpha) override;
 

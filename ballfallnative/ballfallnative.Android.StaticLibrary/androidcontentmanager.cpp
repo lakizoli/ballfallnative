@@ -20,6 +20,7 @@ class JNI_ContentManager {
 		mOpenMethod (nullptr),
 		mCloseMethod (nullptr),
 		mDecodeStreamMethod (nullptr),
+		mInitAdMobMethod (nullptr),
 		mSetTopLeftStyleMethod (nullptr),
 		mSetTopRightStyleMethod (nullptr),
 		mSetTopLeftStatusMethod (nullptr),
@@ -71,6 +72,7 @@ class JNI_ContentManager {
 		mCloseMethod = JNI::GetMethod (clazzInputStream, "close", "()V");
 		mDecodeStreamMethod = JNI::GetStaticMethod (clazzBitmapFactory, "decodeStream", "(Ljava/io/InputStream;)Landroid/graphics/Bitmap;");
 
+		mInitAdMobMethod = JNI::GetMethod (clazzActivity, "initAdMob", "()V");
 		mSetTopLeftStyleMethod = JNI::GetMethod (clazzActivity, "setTopLeftStyle", "(FFFFF)V");
 		mSetTopRightStyleMethod = JNI::GetMethod (clazzActivity, "setTopRightStyle", "(FFFFF)V");
 		mSetTopLeftStatusMethod = JNI::GetMethod (clazzActivity, "setTopLeftStatus", "(Ljava/lang/String;)V");
@@ -98,6 +100,7 @@ class JNI_ContentManager {
 		mCloseMethod = nullptr;
 		mDecodeStreamMethod = nullptr;
 
+		mInitAdMobMethod = nullptr;
 		mSetTopLeftStyleMethod = nullptr;
 		mSetTopRightStyleMethod = nullptr;
 		mSetTopLeftStatusMethod = nullptr;
@@ -115,6 +118,7 @@ class JNI_ContentManager {
 	jmethodID mCloseMethod; ///< The close () method.
 	jmethodID mDecodeStreamMethod; ///< The static decodeStream () method.
 
+	jmethodID mInitAdMobMethod;
 	jmethodID mSetTopLeftStyleMethod;
 	jmethodID mSetTopRightStyleMethod;
 	jmethodID mSetTopLeftStatusMethod;
@@ -164,6 +168,13 @@ int AndroidContentManager::GetHeight (const Image image) const {
 	AndroidBitmapInfo info;
 	AndroidBitmap_getInfo (JNI::GetEnv (), (jobject) image, &info);
 	return (int) info.height;
+}
+
+void AndroidContentManager::InitAdMob () const {
+	JNI_ContentManager& jni = JNI_ContentManager::Get ();
+	JNIEnv* env = JNI::GetEnv ();
+	env->CallVoidMethod (jni.mActivity, jni.mInitAdMobMethod);
+	CHECKARG (!env->ExceptionCheck (), "Cannot init admob, Java exception occured!");
 }
 
 void AndroidContentManager::SetTopLeftStyle (float size, float red, float green, float blue, float alpha) {

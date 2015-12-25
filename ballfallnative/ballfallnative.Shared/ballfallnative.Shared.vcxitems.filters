@@ -10,6 +10,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)management\fallscene.cpp">
       <Filter>management</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)management\menuscene.cpp">
+      <Filter>management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
@@ -35,6 +38,9 @@
       <Filter>management</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)management\ballfallgame.h">
+      <Filter>management</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)management\menuscene.h">
       <Filter>management</Filter>
     </ClInclude>
   </ItemGroup>

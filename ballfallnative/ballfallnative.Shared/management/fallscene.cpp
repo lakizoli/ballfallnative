@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "fallscene.h"
+#include "menuscene.h"
 
 void FallScene::Init (int width, int height) {
 	Game& game = Game::Get ();
 
 	_state = State::PreGame;
+	_failTouched = false;
 
 	_levels.push_back (LevelDefinition ({ 0,  30.0f, 1000, 2000, 0.0f, 1 }));
 	_levels.push_back (LevelDefinition ({ 1,  60.0f,  850, 1500, 0.5f, 1 }));
@@ -58,6 +60,7 @@ void FallScene::Init (int width, int height) {
 	contentManager.SetTopLeftStyle (20, 1, 0, 0, 1);
 	contentManager.SetTopRightStyle (20, 1, 0, 0, 1);
 
+	game.ContentManager ().InitAdMob ();
 	RefreshOverlays (true);
 }
 
@@ -372,6 +375,13 @@ void FallScene::TouchDown (int fingerID, float x, float y) {
 		}
 		break;
 	}
+	case State::FallError:
+		if (!_failTouched) {
+			_failTouched = true;
+
+			//...
+		}
+		break;
 	default:
 		break;
 	}
@@ -406,6 +416,19 @@ void FallScene::TouchUp (int fingerID, float x, float y) {
 		}
 		break;
 	}
+	case State::FallError:
+		if (_failTouched) {
+			_failTouched = false;
+
+			IContentManager& contentManager = Game::ContentManager ();
+			contentManager.SetTopLeftStatus ("");
+			contentManager.SetTopRightStatus ("");
+
+			Game& game = Game::Get ();
+			game.SetCurrentScene (shared_ptr<Scene> (new MenuScene ()));
+			return;
+		}
+		break;
 	default:
 		break;
 	}
@@ -541,35 +564,14 @@ shared_ptr<RigidBody2D> FallScene::FindCollision (const RigidBody2D* body) {
 
 FallScene::RegionTest FallScene::TestBallInEndRegions (shared_ptr<FallingBall> item) const {
 	if (_yellowRegion.Contains (item->ball->Pos)) {
-		stringstream ss;
-		ss << "_yellow found! ball: " << item->ball->TypeAsString() << ", pos: " << item->ball->Pos;
-		Game::Util ().Log (ss.str ());
-
 		return item->ball->Type () == Ball::Color::Yellow || item->ball->Type () == Ball::Color::Magic ? RegionTest::GoodRegion : RegionTest::WrongRegion;
 	} else if (_greenRegion.Contains (item->ball->Pos)) {
-		stringstream ss;
-		ss << "_green found! ball: " << item->ball->TypeAsString () << ", pos: " << item->ball->Pos;
-		Game::Util ().Log (ss.str ());
-
 		return item->ball->Type () == Ball::Color::Green || item->ball->Type () == Ball::Color::Magic ? RegionTest::GoodRegion : RegionTest::WrongRegion;
 	} else if (_redRegion.Contains (item->ball->Pos)) {
-		stringstream ss;
-		ss << "_red found! ball: " << item->ball->TypeAsString () << ", pos: " << item->ball->Pos;
-		Game::Util ().Log (ss.str ());
-
 		return item->ball->Type () == Ball::Color::Red || item->ball->Type () == Ball::Color::Magic ? RegionTest::GoodRegion : RegionTest::WrongRegion;
 	} else if (_blueRegion.Contains (item->ball->Pos)) {
-		stringstream ss;
-		ss << "_blue found! ball: " << item->ball->TypeAsString () << ", pos: " << item->ball->Pos;
-		Game::Util ().Log (ss.str ());
-
 		return item->ball->Type () == Ball::Color::Blue || item->ball->Type () == Ball::Color::Magic ? RegionTest::GoodRegion : RegionTest::WrongRegion;
 	}
-
-	stringstream ss;
-	ss << "NOT found! this: ball: " << item->ball->TypeAsString () << ", pos: " << item->ball->Pos;
-	Game::Util ().Log (ss.str ());
-
 	return RegionTest::NotInRegion;
 }
 

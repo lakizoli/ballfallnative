@@ -78,6 +78,8 @@ private:
 
 	map<int, shared_ptr<FallingBall>> _touchedBalls;
 
+	bool _failTouched;
+
 //Construction
 public:
 	FallScene () {}
