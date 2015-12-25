@@ -7,6 +7,7 @@
 
 //Játék öletek:
 //1.) ballfall: leesõ labdák válogatása különbözõ színû csövekbe (vagy allatok etetese)
+//1b.) labdás játék: olyan, mint a várfal védelem, csak itt az a játék, hogy meg kell akadályozni, hogy rossz színû labda menjen le egy adott színû csõben. Ki kell lukasztani a rossz színû bubikat.
 //2.) dekázo játék: egy labdát kell dekázni mindenféle szélben, esõben, ill. különbözõ skill-ek gesture függõen stb...
 //3.) trojan horse (nintendo handheld)
 //4.) varfal védelem (nintendo handheld)
@@ -16,6 +17,7 @@
 //7.) pörgõ leveleken ugráló béka
 //8.) Aknakeresõ különbözõ alakú pályákkal... (be kellene már fejezni)
 //9.) Tangoes játék (fajáték)
+//10.) snapszer
 
 /// Base class of the game.
 class Game {
