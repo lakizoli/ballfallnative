@@ -66,7 +66,7 @@ void MenuScene::Shutdown () {
 	_background.reset ();
 }
 
-void MenuScene::Resize (int oldWidth, int oldHeight, int newWidth, int newHeight) {
+void MenuScene::Resize (int newWidth, int newHeight) {
 	_background->Scale = _background->boundingBox.Size () / Game::Get ().ToLocal (newWidth, newHeight);
 }
 
@@ -102,6 +102,11 @@ void MenuScene::TouchDown (int fingerID, float x, float y) {
 
 	Game& game = Game::Get ();
 	Vector2D pos = game.ToLocal (x, y);
+
+	stringstream ss;
+	ss << "*********** pos: " << pos << ", startRegion: " << _startRegion;
+	game.Util ().Log (ss.str ());
+
 	if (!_startPressed && _startRegion.Contains (pos)) {
 		_startPressed = true;
 	}

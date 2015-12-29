@@ -15,11 +15,11 @@ void Game::Shutdown () {
 	SetCurrentScene (nullptr);
 }
 
-void Game::Resize (int oldWidth, int oldHeight, int newWidth, int newHeight) {
+void Game::Resize (int newWidth, int newHeight) {
 	InitProjection (newWidth, newHeight);
 
 	if (mCurrentScene != nullptr)
-		mCurrentScene->Resize (oldWidth, oldHeight, newWidth, newHeight);
+		mCurrentScene->Resize (newWidth, newHeight);
 }
 
 void Game::Update (float elapsedTime) {

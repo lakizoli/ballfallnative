@@ -27,7 +27,7 @@ public:
 	virtual void Init (int width, int height) override;
 	virtual void Shutdown () override;
 
-	virtual void Resize (int oldWidth, int oldHeight, int newWidth, int newHeight) override;
+	virtual void Resize (int newWidth, int newHeight) override;
 
 	virtual void Update (float elapsedTime) override;
 	virtual void Render () override;

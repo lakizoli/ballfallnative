@@ -10,7 +10,7 @@ public:
 	virtual void Shutdown () = 0;
 
 	/// Resize scene.
-	virtual void Resize (int oldWidth, int oldHeight, int newWidth, int newHeight) = 0;
+	virtual void Resize (int newWidth, int newHeight) = 0;
 
 	/// Update scene's state in each step.
 	virtual void Update (float elapsedTime) = 0;

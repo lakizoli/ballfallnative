@@ -62,7 +62,7 @@ public:
 	virtual void Init (int width, int height);
 	virtual void Shutdown ();
 
-	void Resize (int oldWidth, int oldHeight, int newWidth, int newHeight);
+	void Resize (int newWidth, int newHeight);
 
 	/// <summary>
 	/// The update step of the game.

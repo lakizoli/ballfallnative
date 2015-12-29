@@ -306,6 +306,14 @@ static void engine_handle_cmd(struct android_app* app, int32_t cmd) {
 		engine->animating = 0;
 		engine_draw_frame(engine);
 		break;
+	//case APP_CMD_CONFIG_CHANGED:
+	//	if (engine->app->window != NULL && engine->game) {
+	//		int32_t width = ANativeWindow_getWidth (engine->app->window);
+	//		int32_t height = ANativeWindow_getHeight (engine->app->window);
+	//		glViewport (0, 0, width, height);
+	//		//engine->game->Resize (width, height);
+	//	}
+		break;
 	}
 }
 

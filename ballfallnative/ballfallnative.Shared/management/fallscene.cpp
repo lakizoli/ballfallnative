@@ -121,7 +121,7 @@ void FallScene::Shutdown () {
 	_levels.clear ();
 }
 
-void FallScene::Resize (int oldWidth, int oldHeight, int newWidth, int newHeight) {
+void FallScene::Resize (int newWidth, int newHeight) {
 	_foreground->Scale = _foreground->boundingBox.Size () / Game::Get ().ToLocal (newWidth, newHeight);
 	_background_1->Scale = _background_1->boundingBox.Size () / Game::Get ().ToLocal (newWidth, newHeight);
 	_background_2->Scale = _background_2->boundingBox.Size () / Game::Get ().ToLocal (newWidth, newHeight);
