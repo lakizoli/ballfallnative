@@ -34,7 +34,7 @@ vector<Vector2D> Geom::LineCircleIntersection (const Vector2D& dir, const Vector
 	if (t41 < 0.0f)
 		return vector<Vector2D> ();
 
-	float t42 = glm::sqrt (t41);
+	float t42 = sqrtf (t41);
 
 	float x1 = (t1 * origin.x + t3 * origin.y + t6 * pt.x - t3 * pt.y + t42) / (t1 + t6);
 	float x2 = -(-(t1 * origin.x) - t3 * origin.y - t6 * pt.x + t3 * pt.y + t42) / (t1 + t6);

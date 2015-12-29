@@ -1,13 +1,16 @@
 #pragma once
 
-class Vector2D : public glm::vec2 {
+class Vector2D {
+//Data
+public:
+	float x, y;
+
 //Construction
 public:
-	Vector2D () : glm::vec2 (0, 0) {}
-	Vector2D (float x, float y) : glm::vec2 (x, y) {}
-	Vector2D (const glm::vec2& vec) : glm::vec2 (vec) {}
-	Vector2D (const Vector2D& vec) : glm::vec2 (vec) {}
-	Vector2D (Vector2D&& vec) : glm::vec2 (move (vec)) {}
+	Vector2D () : x (0), y (0) {}
+	Vector2D (float x, float y) : x (x) , y (y) {}
+	Vector2D (const Vector2D& vec) : x (vec.x), y (vec.y) {}
+	Vector2D (Vector2D&& vec) : x (move (vec.x)), y (move (vec.y)) {}
 
 //Arithmetic Operators
 public:
@@ -153,7 +156,7 @@ public:
 	}
 
 	float Length () const {
-		return glm::sqrt (SquareLength ());
+		return sqrtf (SquareLength ());
 	}
 
 	static float Dot (const Vector2D& v1, const Vector2D& v2) {
