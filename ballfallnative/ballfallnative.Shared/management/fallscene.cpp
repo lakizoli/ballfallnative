@@ -66,6 +66,10 @@ void FallScene::Init (int width, int height) {
 }
 
 void FallScene::Shutdown () {
+	IContentManager& contentManager = Game::ContentManager ();
+	contentManager.SetTopLeftStatus ("");
+	contentManager.SetTopRightStatus ("");
+
 	_touchedBalls.clear ();
 
 	if (_go != nullptr) {

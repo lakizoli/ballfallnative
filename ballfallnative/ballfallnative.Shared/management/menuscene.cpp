@@ -45,7 +45,7 @@ void MenuScene::Init (int width, int height) {
 		_score.push_back (mesh);
 	}
 
-	_startRegion = Rect2D (game.ToLocal (24 * 4, 220 * 4) * refScale, game.ToLocal (260 * 4, 255 * 4) * refScale);
+	_startRegion = Rect2D (game.ToLocal (15 * 4, 195 * 4) * refScale, game.ToLocal (335 * 4, 285 * 4) * refScale);
 	_startPressed = false;
 	_startInPressedState = false;
 

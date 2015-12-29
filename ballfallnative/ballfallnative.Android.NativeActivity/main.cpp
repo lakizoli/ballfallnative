@@ -24,6 +24,8 @@
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "ballfallnative.NativeActivity", __VA_ARGS__))
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "ballfallnative.NativeActivity", __VA_ARGS__))
 
+#define CHECK_GL_ERROR { GLenum err = glGetError (); if (err != GL_NO_ERROR) { LOGW ("!!!!!! opengl error occured !!!!!! error code: %d, file: %s, line: %d", (int)err, __FILE__, __LINE__); } }
+
 /**
 * Our saved state data.
 */
@@ -144,6 +146,8 @@ static int engine_init_display(struct engine* engine) {
 	if (!engine->game) {
 		engine->game.reset(new BallFallGame (*(engine->util), *(engine->contentManager)));
 		engine->game->Init (w, h);
+
+		engine->animating = 1;
 	}
 
 	return 0;
@@ -153,11 +157,36 @@ static int engine_init_display(struct engine* engine) {
 * Just the current frame in the display.
 */
 static void engine_draw_frame(struct engine* engine) {
+	//Handle no display
 	if (engine->display == NULL) {
 		// No display.
 		return;
 	}
 
+	//Handle focus loss, or shutdown
+	if (engine->animating == 0) {
+		if (engine->game) {
+			engine->game->Shutdown ();
+			engine->game.reset ();
+		}
+
+		if (engine->contentManager) {
+			engine->contentManager.reset ();
+		}
+
+		if (engine->util) {
+			engine->util.reset ();
+		}
+
+		if (engine->pointerIDs) {
+			engine->pointerIDs.reset ();
+		}
+
+		engine->lastUpdateTime = -1;
+		return;
+	}
+
+	//Render the game
 	double elapsedTime = 0;
 	double currentTime = engine_get_current_time ();
 	if (engine->lastUpdateTime >= 0)
