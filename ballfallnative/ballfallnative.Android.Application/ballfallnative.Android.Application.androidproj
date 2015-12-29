@@ -119,6 +119,7 @@
     <Content Include="assets\ball_red.png" />
     <Content Include="assets\ball_yellow.png" />
     <Content Include="assets\bomb.png" />
+    <Content Include="assets\click.mp3" />
     <Content Include="assets\explosion.png" />
     <Content Include="assets\fail.png" />
     <Content Include="assets\font.ttf" />

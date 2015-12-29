@@ -18,6 +18,8 @@ private:
 	bool _startPressed;
 	bool _startInPressedState;
 
+	int _clickSoundID;
+
 //Construction
 public:
 	MenuScene () {}

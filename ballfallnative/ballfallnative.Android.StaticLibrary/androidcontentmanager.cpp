@@ -25,6 +25,7 @@ class JNI_ContentManager {
 		mSetTopRightStyleMethod (nullptr),
 		mSetTopLeftStatusMethod (nullptr),
 		mSetTopRightStatusMethod (nullptr),
+		mPlaySoundMethod (nullptr),
 		mReadFileMethod (nullptr),
 		mWriteFileMethod (nullptr),
 		mActivity (nullptr) {
@@ -79,6 +80,7 @@ class JNI_ContentManager {
 		mSetTopRightStyleMethod = JNI::GetMethod (clazzActivity, "setTopRightStyle", "(FFFFF)V");
 		mSetTopLeftStatusMethod = JNI::GetMethod (clazzActivity, "setTopLeftStatus", "(Ljava/lang/String;)V");
 		mSetTopRightStatusMethod = JNI::GetMethod (clazzActivity, "setTopRightStatus", "(Ljava/lang/String;)V");
+		mPlaySoundMethod = JNI::GetMethod (clazzActivity, "playSound", "(Ljava/lang/String;Z)I");
 		mReadFileMethod = JNI::GetMethod (clazzActivity, "readFile", "(Ljava/lang/String;)Ljava/lang/String;");
 		mWriteFileMethod = JNI::GetMethod (clazzActivity, "writeFile", "(Ljava/lang/String;Ljava/lang/String;)V");
 	}
@@ -109,6 +111,7 @@ class JNI_ContentManager {
 		mSetTopRightStyleMethod = nullptr;
 		mSetTopLeftStatusMethod = nullptr;
 		mSetTopRightStatusMethod = nullptr;
+		mPlaySoundMethod = nullptr;
 
 		mReadFileMethod = nullptr;
 		mWriteFileMethod = nullptr;
@@ -130,6 +133,7 @@ class JNI_ContentManager {
 	jmethodID mSetTopRightStyleMethod;
 	jmethodID mSetTopLeftStatusMethod;
 	jmethodID mSetTopRightStatusMethod;
+	jmethodID mPlaySoundMethod;
 	jmethodID mReadFileMethod;
 	jmethodID mWriteFileMethod;
 
@@ -137,8 +141,17 @@ class JNI_ContentManager {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+// JNI functions
+////////////////////////////////////////////////////////////////////////////////////////////////////
+extern "C" JNICALL void Java_com_ballfallnative_GameAcitivity_soundCompleted (JNIEnv* env, jclass clazz, jint soundID) {
+	AndroidContentManager::AddCompletedSoundID (soundID);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // AndroidContentManager implementation
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+set<int> AndroidContentManager::completedSoundIDs;
+
 AndroidContentManager::AndroidContentManager (JavaVM * vm, jobject activity) {
 	CHECKMSG (vm != nullptr, "Java virtual machine reference cannot be nullptr!");
 	CHECKMSG (activity != nullptr, "Activity reference cannot be nullptr!");
@@ -212,6 +225,22 @@ void AndroidContentManager::SetTopRightStatus (const string & text) {
 	JNIEnv* env = JNI::GetEnv ();
 	env->CallVoidMethod (jni.mActivity, jni.mSetTopRightStatusMethod, JavaString (text).get ());
 	CHECKARG (!env->ExceptionCheck (), "Cannot set top right status, Java exception occured!");
+}
+
+int AndroidContentManager::PlaySound (const string & asset, bool looped) {
+	JNI_ContentManager& jni = JNI_ContentManager::Get ();
+	JNIEnv* env = JNI::GetEnv ();
+	jint soundID = env->CallIntMethod (jni.mActivity, jni.mPlaySoundMethod, JavaString (asset).get (), (jboolean) looped);
+	CHECKARG (!env->ExceptionCheck (), "Cannot play sound, Java exception occured!");
+	return soundID;
+}
+
+bool AndroidContentManager::IsSoundEnded (int soundID) const {
+	return AndroidContentManager::IsSoundCompleted (soundID);
+}
+
+void AndroidContentManager::RemoveEndedSoundID (int soundID) {
+	AndroidContentManager::RemoveCompletedSoundID (soundID);
 }
 
 string AndroidContentManager::ReadFile (const string& fileName) const {

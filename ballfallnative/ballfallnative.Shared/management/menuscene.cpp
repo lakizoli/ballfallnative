@@ -49,6 +49,8 @@ void MenuScene::Init (int width, int height) {
 	_startPressed = false;
 	_startInPressedState = false;
 
+	_clickSoundID = 0;
+
 	game.ContentManager ().InitAdMob ();
 }
 
@@ -95,6 +97,17 @@ void MenuScene::Render () {
 
 	for (shared_ptr<ImageMesh> num : _score)
 		num->Render ();
+
+	//Wait click sound end and advance screen
+	Game& game = Game::Get ();
+	IContentManager& contentManager = game.ContentManager ();
+	if (contentManager.IsSoundEnded (_clickSoundID)) {
+		contentManager.RemoveEndedSoundID (_clickSoundID);
+		_clickSoundID = 0;
+
+		game.SetCurrentScene (shared_ptr<Scene> (new FallScene ()));
+		return;
+	}
 }
 
 void MenuScene::TouchDown (int fingerID, float x, float y) {
@@ -116,8 +129,7 @@ void MenuScene::TouchUp (int fingerID, float x, float y) {
 		_startPressed = false;
 
 		Game& game = Game::Get ();
-		game.SetCurrentScene (shared_ptr<Scene> (new FallScene ()));
-		return;
+		_clickSoundID = game.ContentManager ().PlaySound ("click.mp3", false);
 	} else {
 		_startPressed = false;
 	}

@@ -3,6 +3,7 @@ package com.ballfallnative;
 import android.app.NativeActivity;
 import android.app.ActionBar;
 import android.os.Bundle;
+import java.util.concurrent.atomic.AtomicInteger;
 import android.content.*;
 import android.content.res.*;
 import android.view.*;
@@ -10,6 +11,8 @@ import android.graphics.*;
 import android.graphics.drawable.*;
 import android.widget.*;
 import android.util.*;
+import android.net.*;
+import android.media.*;
 import java.io.*;
 import com.google.android.gms.ads.*;
 
@@ -23,6 +26,8 @@ public class GameAcitivity extends NativeActivity {
 
 	private PopupWindow _adOverlay;
 	private AdView _adView;
+
+	private AtomicInteger _soundID = new AtomicInteger (1);
 
 	static {
 		System.loadLibrary("ballfallnative");
@@ -157,6 +162,41 @@ public class GameAcitivity extends NativeActivity {
 				_textTopRight.setText (text);
 			}
 		});
+	}
+
+	private native static void soundCompleted (int soundID);
+
+	public int playSound (String asset, boolean looped) {
+		final GameAcitivity activity = this;
+		final String assetFile = asset;
+		final boolean needToLoop = looped;
+		final int soundID = _soundID.incrementAndGet ();
+
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					AssetFileDescriptor assetFileDescriptor = activity.getAssets ().openFd (assetFile);
+
+					MediaPlayer player = new MediaPlayer();
+					player.setDataSource(assetFileDescriptor.getFileDescriptor ());
+					if (needToLoop)
+						player.setLooping(true);
+					player.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener() {
+						@Override
+						public void onCompletion(MediaPlayer player) {
+							GameAcitivity.soundCompleted (soundID);
+						}
+					});
+					player.prepare();
+					player.start();
+				} catch (IOException ex) {
+					ex.printStackTrace ();
+				}
+			}
+		});
+
+		return soundID;
 	}
 
 	public String readFile (String fileName) {
