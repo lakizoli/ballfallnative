@@ -180,6 +180,7 @@ public class GameAcitivity extends NativeActivity {
 
 					MediaPlayer player = new MediaPlayer();
 					player.setDataSource(assetFileDescriptor.getFileDescriptor ());
+					player.setVolume(1.0f, 1.0f);
 					if (needToLoop)
 						player.setLooping(true);
 					player.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener() {
