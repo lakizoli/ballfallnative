@@ -156,7 +156,7 @@
       <AdditionalIncludeDirectories>..\ballfallnative.Shared;..\game.Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <LibraryDependencies>%(LibraryDependencies);GLESv2;GLESv1_CM;EGL;m;jnigraphics</LibraryDependencies>
+      <LibraryDependencies>%(LibraryDependencies);GLESv2;GLESv1_CM;EGL;m;jnigraphics;OpenSLES</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -169,7 +169,7 @@
       <AdditionalIncludeDirectories>..\ballfallnative.Shared;..\game.Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <LibraryDependencies>%(LibraryDependencies);GLESv2;GLESv1_CM;EGL;m;jnigraphics</LibraryDependencies>
+      <LibraryDependencies>%(LibraryDependencies);GLESv2;GLESv1_CM;EGL;m;jnigraphics;OpenSLES</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

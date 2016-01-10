@@ -9,6 +9,7 @@
 //1.) ballfall: leesõ labdák válogatása különbözõ színû csövekbe (vagy allatok etetese)
 //1b.) labdás játék: olyan, mint a várfal védelem, csak itt az a játék, hogy meg kell akadályozni, hogy rossz színû labda menjen le egy adott színû csõben. Ki kell lukasztani a rossz színû bubikat.
 //1c.) ugyanaz, mint elõbb, csak lufik, és felfelé szállnak. Ki kell lukasztani a rossz színû csõbe menõ lufikat...
+//1d.) Varázsképek matek játék (zolcsi matekházija, szórzótábla)
 //2.) dekázo játék: egy labdát kell dekázni mindenféle szélben, esõben, ill. különbözõ skill-ek gesture függõen stb...
 //3.) trojan horse (nintendo handheld)
 //4.) varfal védelem (nintendo handheld)

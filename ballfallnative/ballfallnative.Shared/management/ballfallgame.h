@@ -40,6 +40,7 @@ inline static ostream& operator << (ostream& stream, const GameState& state) {
 
 class BallFallGame : public Game {
 	GameState _state;
+	int _musicID;
 
 public:
 	BallFallGame (IUtil& util, IContentManager& contentManager) : Game (util, contentManager) {}
@@ -47,6 +48,7 @@ public:
 	virtual void Init (int width, int height) override {
 		Game::Init (width, height);
 		ReadGameState ();
+		_musicID = Game::ContentManager ().PlaySound ("whistleblower", true);
 		SetCurrentScene (shared_ptr<Scene> (new MenuScene ()));
 	}
 

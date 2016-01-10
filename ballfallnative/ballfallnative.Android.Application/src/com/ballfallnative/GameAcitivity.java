@@ -3,7 +3,10 @@ package com.ballfallnative;
 import android.app.NativeActivity;
 import android.app.ActionBar;
 import android.os.Bundle;
-import java.util.concurrent.atomic.AtomicInteger;
+import android.os.Build;
+import java.util.concurrent.locks.*;
+//import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
 import android.content.*;
 import android.content.res.*;
 import android.view.*;
@@ -27,7 +30,7 @@ public class GameAcitivity extends NativeActivity {
 	private PopupWindow _adOverlay;
 	private AdView _adView;
 
-	private AtomicInteger _soundID = new AtomicInteger (1);
+	private SoundPlayer _soundPlayer;
 
 	static {
 		System.loadLibrary("ballfallnative");
@@ -74,6 +77,10 @@ public class GameAcitivity extends NativeActivity {
 				.addTestDevice("54F567A97CA221C8AF6DC24725DD98A9")
 				.build();
         _adView.loadAd(adRequest);
+
+		//Setup sounds and music
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		_soundPlayer = new SoundPlayer();
 	}
 
 	@Override
@@ -166,38 +173,138 @@ public class GameAcitivity extends NativeActivity {
 
 	private native static void soundCompleted (int soundID);
 
-	public int playSound (String asset, boolean looped) {
-		final GameAcitivity activity = this;
-		final String assetFile = asset;
-		final boolean needToLoop = looped;
-		final int soundID = _soundID.incrementAndGet ();
+	public int playSound (final String asset, final boolean looped) {
+		_soundPlayer.WaitLoadAll();
+		_soundPlayer.playSound (asset, looped);
 
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					AssetFileDescriptor assetFileDescriptor = activity.getAssets ().openFd (assetFile);
+//		final GameAcitivity activity = this;
+//		final String assetFile = asset;
+//		final boolean needToLoop = looped;
+//		final int soundID = _soundID.incrementAndGet ();
+//
+//		runOnUiThread(new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					AssetFileDescriptor assetFileDescriptor = activity.getAssets ().openFd (assetFile);
+//					Log.d ("sound", "assetFile: " + assetFile);
+//
+//					MediaPlayer player = new MediaPlayer();
+//					_mediaPlayers.put (soundID, player);
+//
+//					player.setDataSource(assetFileDescriptor.getFileDescriptor ());
+//					player.setVolume(1.0f, 1.0f);
+//					if (needToLoop)
+//						player.setLooping(true);
+//					player.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener() {
+//						@Override
+//						public void onCompletion(MediaPlayer player) {
+//							GameAcitivity.soundCompleted (soundID);
+//							_mediaPlayers.remove (soundID);
+//						}
+//					});
+//					player.prepare();
+//					player.start();
+//				} catch (IOException ex) {
+//					ex.printStackTrace ();
+//				}
+//			}
+//		});
+//
+//		return soundID;
+		return 0;
+	}
 
-					MediaPlayer player = new MediaPlayer();
-					player.setDataSource(assetFileDescriptor.getFileDescriptor ());
-					player.setVolume(1.0f, 1.0f);
-					if (needToLoop)
-						player.setLooping(true);
-					player.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener() {
-						@Override
-						public void onCompletion(MediaPlayer player) {
-							GameAcitivity.soundCompleted (soundID);
-						}
-					});
-					player.prepare();
-					player.start();
-				} catch (IOException ex) {
-					ex.printStackTrace ();
-				}
+	private class SoundPlayer {
+		private AudioManager audioManager;
+		private SoundPool soundPool;
+		private float actVolume, maxVolume, volume;
+
+		private String[] sounds = new String[] {"whistleblower.ogg", "click.ogg"};
+		private TreeMap<Integer, String> soundNames = new TreeMap<Integer, String> ();
+		private TreeMap<String, Integer> soundIDs = new TreeMap<String, Integer> ();
+		private volatile boolean isAllLoaded = false;
+		private final Lock lock = new ReentrantLock();
+
+		public SoundPlayer () {
+			isAllLoaded = false;
+
+			// AudioManager audio settings for adjusting the volume
+			audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+			actVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+			maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			volume = actVolume / maxVolume;
+
+			// Load the sounds
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				AudioAttributes attributes = new AudioAttributes.Builder()
+					.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+					.setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
+					.setUsage(AudioAttributes.USAGE_GAME)
+					.build();
+				soundPool = new SoundPool.Builder().setAudioAttributes(attributes).setMaxStreams(10).build();
+			} else {
+				soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 			}
-		});
+			soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+				@Override
+				public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+					if (status == 0) {
+						lock.lock ();
+						try {
+							soundIDs.put (soundNames.get (sampleId), sampleId);
+						} finally {
+							lock.unlock ();
+						}
+					}
+				}
+			});
 
-		return soundID;
+			try {
+				for (String sound : sounds) {
+					AssetFileDescriptor assetFileDescriptor = getAssets ().openFd (sound);
+					String soundName = sound.substring(0, sound.lastIndexOf('.'));
+					soundNames.put (soundPool.load(assetFileDescriptor, 1), soundName);
+					assetFileDescriptor.close();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		public void WaitLoadAll () {
+			try {
+				if (isAllLoaded)
+					return;
+
+				for (String sound : sounds) {
+					String soundName = sound.substring(0, sound.lastIndexOf('.'));
+					while (getSoundID (soundName) == null) {
+						Thread.sleep(100);
+					}
+				}
+
+				isAllLoaded = true;
+			} catch (InterruptedException ex) {
+				ex.printStackTrace ();
+			}
+		}
+
+		public Integer getSoundID (String name) {
+			lock.lock ();
+			try {
+				return soundIDs.get (name);
+			} finally {
+				lock.unlock();
+			}
+		}
+
+		public void playSound (String name, boolean looped) {
+			Integer soundID = soundIDs.get(name);
+			if (soundID != null) {
+				soundPool.play(soundID, volume, volume, 1, 0, 1f);
+			}
+		}
 	}
 
 	public String readFile (String fileName) {

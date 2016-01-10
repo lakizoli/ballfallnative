@@ -100,7 +100,7 @@ void MenuScene::Render () {
 
 	//Wait click sound end and advance screen
 	Game& game = Game::Get ();
-	IContentManager& contentManager = game.ContentManager ();
+	IContentManager& contentManager = Game::ContentManager ();
 	if (contentManager.IsSoundEnded (_clickSoundID)) {
 		contentManager.RemoveEndedSoundID (_clickSoundID);
 		_clickSoundID = 0;
@@ -127,9 +127,7 @@ void MenuScene::TouchUp (int fingerID, float x, float y) {
 	Vector2D pos = game.ToLocal (x, y);
 	if (_startPressed && _startRegion.Contains (pos)) {
 		_startPressed = false;
-
-		Game& game = Game::Get ();
-		_clickSoundID = game.ContentManager ().PlaySound ("click.mp3", false);
+		_clickSoundID = Game::ContentManager ().PlaySound ("click", false);
 	} else {
 		_startPressed = false;
 	}

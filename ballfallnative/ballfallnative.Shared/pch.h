@@ -25,6 +25,12 @@
 #	include <GLES/gl.h>
 #	include <GLES/glext.h>
 
+#	include <SLES/OpenSLES.h>
+#	include <SLES/OpenSLES_Platform.h>
+#	include <SLES/OpenSLES_Android.h>
+#	include <SLES/OpenSLES_AndroidConfiguration.h>
+#	include <SLES/OpenSLES_AndroidMetadata.h>
+
 #elif __APPLE__
 
 #	include <OpenGLES/ES1/gl.h>
