@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "androidcontentmanager.h"
 #include "JavaString.h"
+#include "audiomanager.h"
 
 #include <android/asset_manager.h>
 #include <android/bitmap.h>
@@ -25,10 +26,10 @@ class JNI_ContentManager {
 		mSetTopRightStyleMethod (nullptr),
 		mSetTopLeftStatusMethod (nullptr),
 		mSetTopRightStatusMethod (nullptr),
-		mPlaySoundMethod (nullptr),
 		mReadFileMethod (nullptr),
 		mWriteFileMethod (nullptr),
-		mActivity (nullptr) {
+		mActivity (nullptr),
+		mAssetManager (nullptr) {
 	}
 
 	~JNI_ContentManager () {
@@ -80,7 +81,6 @@ class JNI_ContentManager {
 		mSetTopRightStyleMethod = JNI::GetMethod (clazzActivity, "setTopRightStyle", "(FFFFF)V");
 		mSetTopLeftStatusMethod = JNI::GetMethod (clazzActivity, "setTopLeftStatus", "(Ljava/lang/String;)V");
 		mSetTopRightStatusMethod = JNI::GetMethod (clazzActivity, "setTopRightStatus", "(Ljava/lang/String;)V");
-		mPlaySoundMethod = JNI::GetMethod (clazzActivity, "playSound", "(Ljava/lang/String;Z)I");
 		mReadFileMethod = JNI::GetMethod (clazzActivity, "readFile", "(Ljava/lang/String;)Ljava/lang/String;");
 		mWriteFileMethod = JNI::GetMethod (clazzActivity, "writeFile", "(Ljava/lang/String;Ljava/lang/String;)V");
 	}
@@ -111,10 +111,12 @@ class JNI_ContentManager {
 		mSetTopRightStyleMethod = nullptr;
 		mSetTopLeftStatusMethod = nullptr;
 		mSetTopRightStatusMethod = nullptr;
-		mPlaySoundMethod = nullptr;
 
 		mReadFileMethod = nullptr;
 		mWriteFileMethod = nullptr;
+
+		mActivity = nullptr;
+		mAssetManager = nullptr;
 	}
 
 	//private:
@@ -133,31 +135,37 @@ class JNI_ContentManager {
 	jmethodID mSetTopRightStyleMethod;
 	jmethodID mSetTopLeftStatusMethod;
 	jmethodID mSetTopRightStatusMethod;
-	jmethodID mPlaySoundMethod;
 	jmethodID mReadFileMethod;
 	jmethodID mWriteFileMethod;
 
 	jobject mActivity; ///< The java instance of the Activity.
+	AAssetManager* mAssetManager;  ///< The native instance of the AssetManager.
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // JNI functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-extern "C" JNICALL void Java_com_ballfallnative_GameAcitivity_soundCompleted (JNIEnv* env, jclass clazz, jint soundID) {
-	AndroidContentManager::AddCompletedSoundID (soundID);
-}
+//...
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // AndroidContentManager implementation
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-set<int> AndroidContentManager::completedSoundIDs;
-
-AndroidContentManager::AndroidContentManager (JavaVM * vm, jobject activity) {
+AndroidContentManager::AndroidContentManager (JavaVM * vm, jobject activity, AAssetManager* assetManager) {
 	CHECKMSG (vm != nullptr, "Java virtual machine reference cannot be nullptr!");
 	CHECKMSG (activity != nullptr, "Activity reference cannot be nullptr!");
+	CHECKMSG (assetManager != nullptr, "AssetManager reference cannot be nullptr!");
 
 	JNI_ContentManager& jni = JNI_ContentManager::Get ();
 	jni.mActivity = activity;
+	jni.mAssetManager = assetManager;
+
+	AudioManager& audioManager = AudioManager::Get ();
+	audioManager.Init (assetManager);
+}
+
+AndroidContentManager::~AndroidContentManager () {
+	AudioManager& audioManager = AudioManager::Get ();
+	audioManager.Shutdown ();
 }
 
 Image AndroidContentManager::LoadImage (const string & asset) {
@@ -227,20 +235,29 @@ void AndroidContentManager::SetTopRightStatus (const string & text) {
 	CHECKARG (!env->ExceptionCheck (), "Cannot set top right status, Java exception occured!");
 }
 
-int AndroidContentManager::PlaySound (const string & asset, bool looped) {
-	JNI_ContentManager& jni = JNI_ContentManager::Get ();
-	JNIEnv* env = JNI::GetEnv ();
-	jint soundID = env->CallIntMethod (jni.mActivity, jni.mPlaySoundMethod, JavaString (asset).get (), (jboolean) looped);
-	CHECKARG (!env->ExceptionCheck (), "Cannot play sound, Java exception occured!");
-	return soundID;
+int AndroidContentManager::LoadSound (const string & asset) {
+	AudioManager& audioManager = AudioManager::Get ();
+	return audioManager.Load (asset);
+}
+
+void AndroidContentManager::UnloadSound (int soundID) {
+	AudioManager& audioManager = AudioManager::Get ();
+	audioManager.Unload (soundID);
+}
+
+void AndroidContentManager::PlaySound (int soundID, float volume, bool looped) {
+	AudioManager& audioManager = AudioManager::Get ();
+	audioManager.Play (soundID, volume, looped);
+}
+
+void AndroidContentManager::StopSound (int soundID) {
+	AudioManager& audioManager = AudioManager::Get ();
+	audioManager.Stop (soundID);
 }
 
 bool AndroidContentManager::IsSoundEnded (int soundID) const {
-	return AndroidContentManager::IsSoundCompleted (soundID);
-}
-
-void AndroidContentManager::RemoveEndedSoundID (int soundID) {
-	AndroidContentManager::RemoveCompletedSoundID (soundID);
+	AudioManager& audioManager = AudioManager::Get ();
+	return audioManager.IsEnded (soundID);
 }
 
 string AndroidContentManager::ReadFile (const string& fileName) const {

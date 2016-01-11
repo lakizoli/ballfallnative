@@ -21,9 +21,12 @@ public:
 	virtual void SetTopLeftStatus (const string& text) = 0;
 	virtual void SetTopRightStatus (const string& text) = 0;
 
-	virtual int PlaySound (const string& asset, bool looped) = 0;
+	virtual int LoadSound (const string& asset) = 0;
+	virtual void UnloadSound (int soundID) = 0;
+
+	virtual void PlaySound (int soundID, float volume, bool looped) = 0;
+	virtual void StopSound (int soundID) = 0;
 	virtual bool IsSoundEnded (int soundID) const = 0;
-	virtual void RemoveEndedSoundID (int soundID) = 0;
 
 	virtual string ReadFile (const string& fileName) const = 0;
 	virtual void WriteFile (const string& fileName, const string& content) = 0;

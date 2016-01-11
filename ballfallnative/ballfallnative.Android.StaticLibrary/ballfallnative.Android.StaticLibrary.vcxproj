@@ -37,6 +37,7 @@
   <ItemGroup>
     <ClInclude Include="androidcontentmanager.h" />
     <ClInclude Include="androidutil.h" />
+    <ClInclude Include="audiomanager.h" />
     <ClInclude Include="JavaByteArray.h" />
     <ClInclude Include="JavaObject.h" />
     <ClInclude Include="JavaString.h" />
@@ -45,6 +46,7 @@
   <ItemGroup>
     <ClCompile Include="androidcontentmanager.cpp" />
     <ClCompile Include="androidutil.cpp" />
+    <ClCompile Include="audiomanager.cpp" />
     <ClCompile Include="jniload.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

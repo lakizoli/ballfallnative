@@ -67,7 +67,7 @@ void FallScene::Init (int width, int height) {
 	contentManager.SetTopLeftStyle (20, 1, 0, 0, 1);
 	contentManager.SetTopRightStyle (20, 1, 0, 0, 1);
 
-	game.ContentManager ().InitAdMob ();
+	contentManager.InitAdMob ();
 	RefreshOverlays (true);
 }
 

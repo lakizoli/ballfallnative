@@ -7,10 +7,12 @@
     <ClInclude Include="JavaObject.h" />
     <ClInclude Include="JavaString.h" />
     <ClInclude Include="JavaByteArray.h" />
+    <ClInclude Include="audiomanager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="androidutil.cpp" />
     <ClCompile Include="androidcontentmanager.cpp" />
     <ClCompile Include="jniload.cpp" />
+    <ClCompile Include="audiomanager.cpp" />
   </ItemGroup>
 </Project>

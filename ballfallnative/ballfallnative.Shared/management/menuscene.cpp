@@ -49,12 +49,18 @@ void MenuScene::Init (int width, int height) {
 	_startPressed = false;
 	_startInPressedState = false;
 
-	_clickSoundID = 0;
+	IContentManager& contentManager = Game::ContentManager ();
+	_clickSoundID = contentManager.LoadSound ("click.ogg");
 
-	game.ContentManager ().InitAdMob ();
+	contentManager.InitAdMob ();
 }
 
 void MenuScene::Shutdown () {
+	IContentManager& contentManager = Game::ContentManager ();
+	contentManager.StopSound (_clickSoundID);
+	contentManager.UnloadSound (_clickSoundID);
+	_clickSoundID = 0;
+
 	_startPressed = false;
 
 	for (shared_ptr<ImageMesh> num : _score)
@@ -99,13 +105,8 @@ void MenuScene::Render () {
 		num->Render ();
 
 	//Wait click sound end and advance screen
-	Game& game = Game::Get ();
-	IContentManager& contentManager = Game::ContentManager ();
-	if (contentManager.IsSoundEnded (_clickSoundID)) {
-		contentManager.RemoveEndedSoundID (_clickSoundID);
-		_clickSoundID = 0;
-
-		game.SetCurrentScene (shared_ptr<Scene> (new FallScene ()));
+	if (Game::ContentManager ().IsSoundEnded (_clickSoundID)) {
+		Game::Get ().SetCurrentScene (shared_ptr<Scene> (new FallScene ()));
 		return;
 	}
 }
@@ -127,7 +128,7 @@ void MenuScene::TouchUp (int fingerID, float x, float y) {
 	Vector2D pos = game.ToLocal (x, y);
 	if (_startPressed && _startRegion.Contains (pos)) {
 		_startPressed = false;
-		_clickSoundID = Game::ContentManager ().PlaySound ("click", false);
+		Game::ContentManager ().PlaySound (_clickSoundID, 1.0f, false);
 	} else {
 		_startPressed = false;
 	}

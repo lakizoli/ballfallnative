@@ -13,6 +13,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)management\menuscene.cpp">
       <Filter>management</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)management\ballfallgame.cpp">
+      <Filter>management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />

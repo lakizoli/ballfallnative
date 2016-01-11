@@ -28,6 +28,7 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)content\ball.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)content\imagemesh.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)management\ballfallgame.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)management\fallscene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)management\menuscene.cpp" />
   </ItemGroup>

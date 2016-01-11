@@ -53,9 +53,13 @@
 #include <utility>
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <sstream>
 using namespace std;
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <assert.h>
+#include <string.h>

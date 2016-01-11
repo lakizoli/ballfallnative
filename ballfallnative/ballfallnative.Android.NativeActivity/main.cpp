@@ -140,7 +140,7 @@ static int engine_init_display(struct engine* engine) {
 	}
 
 	if (!engine->contentManager) {
-		engine->contentManager.reset (new AndroidContentManager (engine->app->activity->vm, engine->app->activity->clazz));
+		engine->contentManager.reset (new AndroidContentManager (engine->app->activity->vm, engine->app->activity->clazz, engine->app->activity->assetManager));
 	}
 
 	if (!engine->game) {

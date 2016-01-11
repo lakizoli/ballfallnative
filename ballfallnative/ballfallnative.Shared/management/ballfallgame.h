@@ -6,31 +6,8 @@
 struct GameState {
 	int highScore;
 
-	GameState () : highScore (0) {}
-
-	const GameState& operator << (istream& stream) {
-		//TODO: implement a general purpose JSON serializer/deserializer into base code...
-
-		bool foundEnd = false;
-		while (!foundEnd && stream.good ()) {
-			char ch = 0;
-			stream.read (&ch, 1);
-
-			if (stream.good ()) {
-				switch (ch) {
-				case '}':
-					foundEnd = true;
-					break;
-				case ':':
-					stream >> highScore;
-					break;
-				default:
-					break;
-				}
-			}
-		}
-		return *this;
-	}
+	GameState ();
+	const GameState& operator << (istream& stream);
 };
 
 inline static ostream& operator << (ostream& stream, const GameState& state) {
@@ -43,14 +20,10 @@ class BallFallGame : public Game {
 	int _musicID;
 
 public:
-	BallFallGame (IUtil& util, IContentManager& contentManager) : Game (util, contentManager) {}
+	BallFallGame (IUtil& util, IContentManager& contentManager);
 
-	virtual void Init (int width, int height) override {
-		Game::Init (width, height);
-		ReadGameState ();
-		_musicID = Game::ContentManager ().PlaySound ("whistleblower", true);
-		SetCurrentScene (shared_ptr<Scene> (new MenuScene ()));
-	}
+	virtual void Init (int width, int height) override;
+	virtual void Shutdown () override;
 
 	const GameState& State () const {
 		return _state;
@@ -60,14 +33,6 @@ public:
 		return _state;
 	}
 
-	void ReadGameState () {
-		istringstream ss (ContentManager ().ReadFile ("state.save"));
-		_state << ss;
-	}
-
-	void SaveGameState () {
-		stringstream ss;
-		ss << _state;
-		ContentManager ().WriteFile ("state.save", ss.str ());
-	}
+	void ReadGameState ();
+	void SaveGameState ();
 };

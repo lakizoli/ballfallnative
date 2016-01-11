@@ -142,6 +142,7 @@
     <Content Include="assets\steady.png" />
     <Content Include="assets\whistleblower.mp3" />
     <Content Include="assets\whistleblower.ogg" />
+    <Content Include="assets\whistleblower.wav" />
     <Content Include="res\values\strings.xml" />
     <AntBuildXml Include="build.xml" />
     <AndroidManifest Include="AndroidManifest.xml" />
