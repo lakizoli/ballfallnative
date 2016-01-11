@@ -16,6 +16,7 @@ private:
 
 	Rect2D _startRegion;
 	bool _startPressed;
+	bool _startReleasedInRegion;
 	bool _startInPressedState;
 
 	int _clickSoundID;

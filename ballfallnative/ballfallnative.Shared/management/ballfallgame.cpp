@@ -40,7 +40,7 @@ void BallFallGame::Init (int width, int height) {
 
 	IContentManager& contentManager = Game::ContentManager ();
 	_musicID = contentManager.LoadSound ("whistleblower.ogg");
-	contentManager.PlaySound (_musicID, 0.7f, true);
+	contentManager.PlaySound (_musicID, 0.8f, true);
 
 	SetCurrentScene (shared_ptr<Scene> (new MenuScene ()));
 }

@@ -122,7 +122,7 @@ int AudioManager::Load (const string & assetName) {
 	SLDataFormat_MIME format_mime = {
 		SL_DATAFORMAT_MIME,
 		NULL,
-		SL_CONTAINERTYPE_UNSPECIFIED
+		SL_CONTAINERTYPE_OGG
 	};
 
 	SLDataSource audioSrc = {

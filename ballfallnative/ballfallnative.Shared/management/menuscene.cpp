@@ -47,6 +47,7 @@ void MenuScene::Init (int width, int height) {
 
 	_startRegion = Rect2D (game.ToLocal (15 * 4, 195 * 4) * refScale, game.ToLocal (335 * 4, 285 * 4) * refScale);
 	_startPressed = false;
+	_startReleasedInRegion = false;
 	_startInPressedState = false;
 
 	IContentManager& contentManager = Game::ContentManager ();
@@ -62,6 +63,8 @@ void MenuScene::Shutdown () {
 	_clickSoundID = 0;
 
 	_startPressed = false;
+	_startReleasedInRegion = false;
+	_startInPressedState = false;
 
 	for (shared_ptr<ImageMesh> num : _score)
 		num->Shutdown ();
@@ -105,7 +108,7 @@ void MenuScene::Render () {
 		num->Render ();
 
 	//Wait click sound end and advance screen
-	if (Game::ContentManager ().IsSoundEnded (_clickSoundID)) {
+	if (!_startPressed && _startReleasedInRegion && Game::ContentManager ().IsSoundEnded (_clickSoundID)) {
 		Game::Get ().SetCurrentScene (shared_ptr<Scene> (new FallScene ()));
 		return;
 	}
@@ -118,6 +121,8 @@ void MenuScene::TouchDown (int fingerID, float x, float y) {
 	Vector2D pos = game.ToLocal (x, y);
 	if (!_startPressed && _startRegion.Contains (pos)) {
 		_startPressed = true;
+		_startReleasedInRegion = false;
+		Game::ContentManager ().PlaySound (_clickSoundID, 1.0f, false);
 	}
 }
 
@@ -128,7 +133,7 @@ void MenuScene::TouchUp (int fingerID, float x, float y) {
 	Vector2D pos = game.ToLocal (x, y);
 	if (_startPressed && _startRegion.Contains (pos)) {
 		_startPressed = false;
-		Game::ContentManager ().PlaySound (_clickSoundID, 1.0f, false);
+		_startReleasedInRegion = true;
 	} else {
 		_startPressed = false;
 	}

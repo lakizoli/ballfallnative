@@ -119,7 +119,6 @@
     <Content Include="assets\ball_red.png" />
     <Content Include="assets\ball_yellow.png" />
     <Content Include="assets\bomb.png" />
-    <Content Include="assets\click.mp3" />
     <Content Include="assets\click.ogg" />
     <Content Include="assets\explosion.png" />
     <Content Include="assets\fail.png" />
@@ -140,9 +139,7 @@
     <Content Include="assets\score9.png" />
     <Content Include="assets\start_new_game.png" />
     <Content Include="assets\steady.png" />
-    <Content Include="assets\whistleblower.mp3" />
     <Content Include="assets\whistleblower.ogg" />
-    <Content Include="assets\whistleblower.wav" />
     <Content Include="res\values\strings.xml" />
     <AntBuildXml Include="build.xml" />
     <AndroidManifest Include="AndroidManifest.xml" />
