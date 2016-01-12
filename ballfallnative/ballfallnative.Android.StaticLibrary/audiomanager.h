@@ -13,6 +13,7 @@ private:
 		SLPlayItf play;
 		SLSeekItf seek;
 		SLVolumeItf volume;
+		SLPrefetchStatusItf prefetch;
 
 		Player (int soundID);
 		~Player ();
@@ -37,7 +38,7 @@ public:
 
 	void Play (int soundID, float volume, bool looped);
 	void Stop (int soundID);
-	bool IsEnded (int soundID) const;
+	bool IsEnded (int soundID);
 
 private:
 	static void SLAPIENTRY PlayCallback (SLPlayItf play, void *context, SLuint32 event);

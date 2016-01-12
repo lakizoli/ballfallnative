@@ -19,6 +19,9 @@ void FallScene::Init (int width, int height) {
 	_levels.push_back (LevelDefinition ({ 7, 240.0f,  600, 1000, 1.4f, 1 }));
 	_levels.push_back (LevelDefinition ({ 8, 270.0f,  600, 1000, 1.5f, 1 }));
 	_levels.push_back (LevelDefinition ({ 9, 300.0f,  600, 1000, 1.6f, 1 }));
+	for (int i = 10; i < 100; ++i) {
+		_levels.push_back (LevelDefinition ({ i, 300.0f + i * 30.0f,  600, 1000, 1.6f, 1 }));
+	}
 
 	_currentLevel = 0;
 	_score = 0;
@@ -35,9 +38,11 @@ void FallScene::Init (int width, int height) {
 	_redRegion = Rect2D (game.ToLocal (width - 20 * 4, 65 * 4), game.ToLocal (width + 2000, 270 * 4));
 	_blueRegion = Rect2D (game.ToLocal (width - 20 * 4, 270 * 4), game.ToLocal (width + 2000, 480 * 4 + 2000));
 
-	_ready.reset (new QTEGrowText ("ready.png", 0.5f));
+	_ready.reset (new QTEGrowText ("ready.png", 0.75f));
 	_ready->Init ();
 	_ready->Start ();
+
+	_readyStart = true;
 
 	_steady = nullptr;
 	_go = nullptr;
@@ -67,6 +72,14 @@ void FallScene::Init (int width, int height) {
 	contentManager.SetTopLeftStyle (20, 1, 0, 0, 1);
 	contentManager.SetTopRightStyle (20, 1, 0, 0, 1);
 
+	_readySoundID = contentManager.LoadSound ("beep1.ogg");
+	_steadySoundID = contentManager.LoadSound ("beep1.ogg");
+	_goSoundID = contentManager.LoadSound ("beep1.ogg");
+	_startSoundID = contentManager.LoadSound ("beep2.ogg");
+
+	_explosionSoundID = contentManager.LoadSound ("explosion.ogg");
+	_whooshSoundID = contentManager.LoadSound ("whoosh.ogg");
+
 	contentManager.InitAdMob ();
 	RefreshOverlays (true);
 }
@@ -75,6 +88,14 @@ void FallScene::Shutdown () {
 	IContentManager& contentManager = Game::ContentManager ();
 	contentManager.SetTopLeftStatus ("");
 	contentManager.SetTopRightStatus ("");
+
+	contentManager.UnloadSound (_whooshSoundID);
+	contentManager.UnloadSound (_explosionSoundID);
+
+	contentManager.UnloadSound (_startSoundID);
+	contentManager.UnloadSound (_goSoundID);
+	contentManager.UnloadSound (_steadySoundID);
+	contentManager.UnloadSound (_readySoundID);
 
 	_touchedBalls.clear ();
 
@@ -143,38 +164,58 @@ void FallScene::Update (float elapsedTime) {
 	//Handle pre game effects
 	if (_state == State::PreGame) {
 		if (_ready != nullptr) {
+			if (_readyStart) {
+				IContentManager& contentManager = Game::ContentManager (); 
+				contentManager.PlaySound (_readySoundID, 1.0f, false);
+
+				_readyStart = false;
+			}
+
 			_ready->Update (elapsedTime);
 			if (_ready->IsEnded ()) {
+				IContentManager& contentManager = Game::ContentManager ();
+				contentManager.StopSound (_readySoundID);
+
 				_fullTime = 0;
 				_lastAddTime = 0;
 
 				_ready->Shutdown ();
 				_ready.reset ();
 
-				_steady.reset (new QTEGrowText ("steady.png", 0.5f));
+				_steady.reset (new QTEGrowText ("steady.png", 0.75f));
 				_steady->Init ();
 				_steady->Start ();
+
+				contentManager.PlaySound (_steadySoundID, 1.0f, false);
 			}
 		}
 
 		if (_steady != nullptr) {
 			_steady->Update (elapsedTime);
 			if (_steady->IsEnded ()) {
+				IContentManager& contentManager = Game::ContentManager ();
+				contentManager.StopSound (_steadySoundID);
+
 				_fullTime = 0;
 				_lastAddTime = 0;
 
 				_steady->Shutdown ();
 				_steady.reset ();
 
-				_go.reset (new QTEGrowText ("go.png", 0.5f));
+				_go.reset (new QTEGrowText ("go.png", 0.75f));
 				_go->Init ();
 				_go->Start ();
+
+				contentManager.PlaySound (_goSoundID, 1.0f, false);
 			}
 		}
 
 		if (_go != nullptr) {
 			_go->Update (elapsedTime);
 			if (_go->IsEnded ()) {
+				IContentManager& contentManager = Game::ContentManager ();
+				contentManager.StopSound (_goSoundID);
+
 				_fullTime = 0;
 				_lastAddTime = 0;
 
@@ -182,6 +223,8 @@ void FallScene::Update (float elapsedTime) {
 				_go.reset ();
 
 				_state = State::Game;
+
+				contentManager.PlaySound (_startSoundID, 1.0f, false);
 			}
 		}
 
@@ -197,6 +240,9 @@ void FallScene::Update (float elapsedTime) {
 	if (_fullTime > curLevel.endTime && _currentLevel < (int) _levels.size () - 1) {
 		_currentLevel += 1;
 		RefreshOverlays (true);
+
+		IContentManager& contentManager = Game::ContentManager ();
+		contentManager.PlaySound (_startSoundID, 1.0f, false);
 	}
 
 	const LevelDefinition& level = _levels[_currentLevel];
@@ -487,15 +533,17 @@ void FallScene::AddNewBalls (const LevelDefinition & level) {
 		Game& game = Game::Get ();
 		int addCount = 1; //_random.Next (1, level.maxAddCount + 1);
 		for (int i = 0; i < addCount; ++i) {
+			IContentManager& contentManager = Game::ContentManager ();
+			contentManager.PlaySound (_whooshSoundID, 1.0f, false);
+
 			shared_ptr<Ball> ball;
-			switch (NextRandom (6)) {
+			switch (NextRandom (5)) {
 			default:
 			case 0: ball.reset (new Ball (Ball::Color::Red)); break;
 			case 1: ball.reset (new Ball (Ball::Color::Green)); break;
 			case 2: ball.reset (new Ball (Ball::Color::Blue)); break;
 			case 3: ball.reset (new Ball (Ball::Color::Yellow)); break;
-			case 4: ball.reset (new Ball (Ball::Color::Magic)); break;
-			case 5: ball.reset (new Ball (Ball::Color::Bomb)); break;
+			case 4: ball.reset (new Ball (Ball::Color::Bomb)); break;
 			}
 
 			ball->Init ();
@@ -609,6 +657,11 @@ void FallScene::HandleWrongRegionEnd (shared_ptr<Ball> ball) {
 }
 
 void FallScene::HandleBombBlowEnd (shared_ptr<Ball> ball) {
+	_state = State::BlowError;
+
+	IContentManager& contentManager = Game::ContentManager ();
+	contentManager.PlaySound (_explosionSoundID, 1.0f, false);
+
 	shared_ptr<QTEExplodeBall> qte (new QTEExplodeBall (ball));
 	qte->Init ();
 	qte->Start ();

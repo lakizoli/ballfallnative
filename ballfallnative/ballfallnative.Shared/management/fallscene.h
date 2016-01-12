@@ -42,7 +42,8 @@ private:
 	enum class State {
 		PreGame,
 		Game,
-		FallError
+		FallError,
+		BlowError
 	};
 
 //Data
@@ -64,6 +65,14 @@ private:
 	shared_ptr<QTEGrowText> _ready;
 	shared_ptr<QTEGrowText> _steady;
 	shared_ptr<QTEGrowText> _go;
+
+	bool _readyStart;
+	int _readySoundID;
+	int _steadySoundID;
+	int _goSoundID;
+	int _startSoundID;
+	int _explosionSoundID;
+	int _whooshSoundID;
 
 	vector<shared_ptr<FallingBall>> _fallingBalls;
 	vector<shared_ptr<QTEGoodBall>> _endedBalls;

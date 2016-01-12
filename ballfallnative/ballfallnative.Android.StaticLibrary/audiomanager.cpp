@@ -11,7 +11,8 @@ AudioManager::Player::Player (int soundID) :
 	player (nullptr),
 	play (nullptr),
 	seek (nullptr),
-	volume (nullptr) {
+	volume (nullptr),
+	prefetch (nullptr) {
 }
 
 AudioManager::Player::~Player () {
@@ -30,6 +31,7 @@ AudioManager::Player::~Player () {
 	play = nullptr;
 	seek = nullptr;
 	volume = nullptr;
+	prefetch = nullptr;
 }
 
 int AudioManager::mNextID = 1;
@@ -53,8 +55,12 @@ bool AudioManager::Init (AAssetManager * assetManager) {
 	CHECKMSG (assetManager != nullptr, "AudioManager::Init () - assetManager cannot be nullptr!");
 	mAssetManager = assetManager;
 
-	SLresult result;
-	result = slCreateEngine (&mEngineObject, 0, NULL, 0, NULL, NULL);
+	const unsigned int NUM_OPTIONS = 1;
+	SLEngineOption options[NUM_OPTIONS] = {
+		{ (SLuint32) SL_ENGINEOPTION_THREADSAFE, (SLuint32) SL_BOOLEAN_TRUE }
+	};
+
+	SLresult result = slCreateEngine (&mEngineObject, NUM_OPTIONS, options, 0, NULL, NULL);
 	CHECKMSG (result == SL_RESULT_SUCCESS && mEngineObject != nullptr, "AudioManager::Init () - slCreateEngine () failed");
 
 	result = (*mEngineObject)->Realize (mEngineObject, SL_BOOLEAN_FALSE);
@@ -122,7 +128,7 @@ int AudioManager::Load (const string & assetName) {
 	SLDataFormat_MIME format_mime = {
 		SL_DATAFORMAT_MIME,
 		NULL,
-		SL_CONTAINERTYPE_OGG
+		SL_CONTAINERTYPE_UNSPECIFIED
 	};
 
 	SLDataSource audioSrc = {
@@ -145,9 +151,9 @@ int AudioManager::Load (const string & assetName) {
 	struct Player* player = new struct Player (mNextID++);
 
 	// create audio player
-	const unsigned int NUM_INTERFACES = 3;
-	const SLInterfaceID ids[NUM_INTERFACES] = { SL_IID_PLAY, SL_IID_SEEK, SL_IID_VOLUME };
-	const SLboolean req[NUM_INTERFACES] = { SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE };
+	const unsigned int NUM_INTERFACES = 4;
+	const SLInterfaceID ids[NUM_INTERFACES] = { SL_IID_PLAY, SL_IID_SEEK, SL_IID_VOLUME, SL_IID_PREFETCHSTATUS };
+	const SLboolean req[NUM_INTERFACES] = { SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE, SL_BOOLEAN_TRUE };
 
 	SLresult result = (*mEngine)->CreateAudioPlayer (mEngine, &player->player, &audioSrc, &audioSnk, NUM_INTERFACES, ids, req);
 	CHECKMSG (result == SL_RESULT_SUCCESS && player->player != nullptr, "AudioManager::Load () - CreateAudioPlayer () failed");
@@ -167,6 +173,10 @@ int AudioManager::Load (const string & assetName) {
 	// get the volume interface
 	result = (*player->player)->GetInterface (player->player, SL_IID_VOLUME, &player->volume);
 	CHECKMSG (result == SL_RESULT_SUCCESS && player->volume != nullptr, "AudioManager::Load () - Player::GetInterface (SL_IID_VOLUME) failed");
+
+	// get the prefetch status interface
+	result = (*player->player)->GetInterface (player->player, SL_IID_PREFETCHSTATUS, &player->prefetch);
+	CHECKMSG (result == SL_RESULT_SUCCESS && player->prefetch != nullptr, "AudioManager::Load () - Player::GetInterface (SL_IID_PREFETCHSTATUS) failed");
 
 	(*player->play)->RegisterCallback (player->play, AudioManager::PlayCallback, player);
 	(*player->play)->SetCallbackEventsMask (player->play, SL_PLAYEVENT_HEADATEND);
@@ -201,11 +211,16 @@ void AudioManager::Play (int soundID, float volume, bool looped) {
 	player->ended = false;
 
 	if (player->play != nullptr) {
-		(*player->play)->SetPlayState (player->play, SL_PLAYSTATE_STOPPED);
+		SLresult result = (*player->play)->SetPlayState (player->play, SL_PLAYSTATE_STOPPED);
+		CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::Play () - Play::SetPlayState (Stopped) failed");
 	}
 
-	if (looped && player->seek != nullptr) {
-		(*player->seek)->SetLoop (player->seek, SL_BOOLEAN_TRUE, 0, SL_TIME_UNKNOWN);
+	if (player->seek != nullptr) {
+		SLresult result = (*player->seek)->SetPosition (player->seek, 0, SL_SEEKMODE_ACCURATE);
+		CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::Play () - Seek::SetPosition () failed");
+
+		result = (*player->seek)->SetLoop (player->seek, looped ? SL_BOOLEAN_TRUE : SL_BOOLEAN_FALSE, 0, SL_TIME_UNKNOWN);
+		CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::Play () - Seek::SetLoop () failed");
 	}
 
 	if (player->volume != nullptr) {
@@ -222,11 +237,27 @@ void AudioManager::Play (int soundID, float volume, bool looped) {
 		else if (level > (int)maxLevel)
 			level = (int) maxLevel;
 
-		(*player->volume)->SetVolumeLevel (player->volume, (SLmillibel) level);
+		SLresult result = (*player->volume)->SetVolumeLevel (player->volume, (SLmillibel) level);
+		CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::Play () - Volume::SetVolumeLevel () failed");
 	}
 
 	if (player->play != nullptr) {
-		(*player->play)->SetPlayState (player->play, SL_PLAYSTATE_PLAYING);
+		//Set player to paused
+		SLresult result = (*player->play)->SetPlayState (player->play, SL_PLAYSTATE_PAUSED);
+		CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::Play () - Play::SetPlayState (Paused) failed");
+
+		// Wait until there's data to play
+		if (player->prefetch != nullptr) {
+			SLpermille fillLevel = 0;
+			while (fillLevel != 1000) {
+				result = (*player->prefetch)->GetFillLevel (player->prefetch, &fillLevel);
+				CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::Play () - Prefetch::GetFillLevel () failed");
+			}
+		}
+
+		//Start playing
+		result = (*player->play)->SetPlayState (player->play, SL_PLAYSTATE_PLAYING);
+		CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::Play () - Play::SetPlayState (Play) failed");
 	}
 }
 
@@ -243,14 +274,15 @@ void AudioManager::Stop (int soundID) {
 
 	SLPlayItf play = player->play;
 	if (play != nullptr) {
-		(*play)->SetPlayState (play, SL_PLAYSTATE_STOPPED);
+		SLresult result = (*play)->SetPlayState (play, SL_PLAYSTATE_STOPPED);
+		CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::Stop () - Play::SetPlayState () failed");
 	}
 
 	player->looped = false;
 	player->ended = true;
 }
 
-bool AudioManager::IsEnded (int soundID) const {
+bool AudioManager::IsEnded (int soundID) {
 	CHECKMSG (mInited, "AudioManager::IsEnded () - Can be called only after Init ()!");
 
 	auto it = mPlayers.find (soundID);
@@ -261,7 +293,30 @@ bool AudioManager::IsEnded (int soundID) const {
 	if (player == nullptr)
 		return true;
 
-	return player->ended;
+	if (player->ended)
+		return true;
+
+	bool isEnded = false;
+	SLPlayItf play = player->play;
+	if (play != nullptr) {
+		SLmillisecond duration = 0;
+		SLresult result = (*play)->GetDuration (play, &duration);
+		CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::IsEnded () - Play::GetDuration () failed");
+
+		SLmillisecond pos = 0;
+		result = (*play)->GetPosition (play, &pos);
+		CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::IsEnded () - Play::GetPosition () failed");
+
+		isEnded = pos >= duration;
+		if (isEnded) { //Stop when ended
+			result = (*play)->SetPlayState (play, SL_PLAYSTATE_STOPPED);
+			CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::IsEnded () - Play::SetPlayState (Stop) failed");
+
+			player->ended = true;
+		}
+	}
+
+	return isEnded;
 }
 
 void SLAPIENTRY AudioManager::PlayCallback (SLPlayItf play, void *context, SLuint32 event) {
@@ -269,11 +324,14 @@ void SLAPIENTRY AudioManager::PlayCallback (SLPlayItf play, void *context, SLuin
 	CHECKMSG (context != nullptr, "play_callback () - context cannot be nullptr!");
 
 	if (event & SL_PLAYEVENT_HEADATEND) {
-		(*play)->SetPlayState (play, SL_PLAYSTATE_STOPPED);
-
 		struct Player* player = (struct Player*) context;
-		if (player != nullptr && !player->looped) { //Register sound end when not looped
-			player->ended = true;
+		if (player != nullptr && !player->ended) {
+			SLresult result = (*play)->SetPlayState (play, SL_PLAYSTATE_STOPPED);
+			CHECKMSG (result == SL_RESULT_SUCCESS, "AudioManager::PlayCallback () - Play::SetPlayState (Stop) failed");
+
+			if (!player->looped) { //Register sound end when not looped
+				player->ended = true;
+			}
 		}
 	}
 }
