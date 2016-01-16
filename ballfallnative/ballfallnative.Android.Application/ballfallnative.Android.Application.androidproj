@@ -200,6 +200,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugLite|x86'">
     <AntPackage>
       <AndroidAppLibName>$(RootNamespace)</AndroidAppLibName>
+      <AdditionalOptions>-Disliteversion=true</AdditionalOptions>
+      <ApplicationName>$(TargetName).lite</ApplicationName>
     </AntPackage>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
@@ -212,6 +214,8 @@
     <AntPackage>
       <AndroidAppLibName>$(RootNamespace)</AndroidAppLibName>
       <AntTarget>release</AntTarget>
+      <ApplicationName>$(TargetName).lite</ApplicationName>
+      <AdditionalOptions>-Disliteversion=true</AdditionalOptions>
     </AntPackage>
   </ItemDefinitionGroup>
   <ItemGroup>
