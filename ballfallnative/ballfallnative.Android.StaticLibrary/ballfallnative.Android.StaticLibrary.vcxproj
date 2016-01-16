@@ -144,6 +144,7 @@
       <PrecompiledHeaderFile>..\ballfallnative.Shared\pch.h</PrecompiledHeaderFile>
       <ExceptionHandling>Enabled</ExceptionHandling>
       <CppLanguageStandard>c++11</CppLanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
@@ -152,6 +153,7 @@
       <PrecompiledHeaderFile>..\ballfallnative.Shared\pch.h</PrecompiledHeaderFile>
       <ExceptionHandling>Enabled</ExceptionHandling>
       <CppLanguageStandard>c++11</CppLanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">

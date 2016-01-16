@@ -203,9 +203,10 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <CppLanguageStandard>c++11</CppLanguageStandard>
       <ExceptionHandling>Enabled</ExceptionHandling>
+      <AdditionalIncludeDirectories>..\ballfallnative.Shared;..\game.Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <LibraryDependencies>%(LibraryDependencies);GLESv2;EGL;m</LibraryDependencies>
+      <LibraryDependencies>%(LibraryDependencies);GLESv2;GLESv1_CM;EGL;m;jnigraphics;OpenSLES</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
@@ -215,9 +216,10 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <CppLanguageStandard>c++11</CppLanguageStandard>
       <ExceptionHandling>Enabled</ExceptionHandling>
+      <AdditionalIncludeDirectories>..\ballfallnative.Shared;..\game.Shared;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <LibraryDependencies>%(LibraryDependencies);GLESv2;EGL;m</LibraryDependencies>
+      <LibraryDependencies>%(LibraryDependencies);GLESv2;GLESv1_CM;EGL;m;jnigraphics;OpenSLES</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

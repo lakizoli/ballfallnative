@@ -8,14 +8,16 @@ class JNI
 	friend JavaVM* GetJavaVM ();
 	friend JNIEnv* GetEnv ();
 	friend jclass FindClass (const char* signature);
-	friend JNIEXPORT jint JNICALL::JNI_OnLoad (JavaVM* vm, void* reserved);
-	friend JNIEXPORT void ::JNI_OnUnload (JavaVM* vm, void* reserved);
+	//friend jint JNICALL::JNI_OnLoad (JavaVM* vm, void* reserved);
+	//friend void ::JNI_OnUnload (JavaVM* vm, void* reserved);
 
+private:
 	JavaVM* javaVM;
 	jclass classLoaderClass;
 	jobject classLoaderInstance;
 	jmethodID findClassMethod;
 
+public:
 	JNI () {
 		javaVM = nullptr;
 		classLoaderClass = nullptr;
