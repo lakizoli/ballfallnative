@@ -32,6 +32,8 @@ public class GameAcitivity extends NativeActivity {
 		System.loadLibrary("ballfallnative");
 	}
 
+	private static native boolean isLite ();
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,44 +67,51 @@ public class GameAcitivity extends NativeActivity {
 		_textTopLeft.setProperties (tf, new byte[]{ (byte)255, (byte)92, (byte)16, (byte)16 }, convertDpToPixel (5), new byte[]{ (byte)255, (byte)255, 0, 0 });
 
 		//Setup adMob overlay
-		_adView = new AdView(this);
-		_adView.setAdUnitId("ca-app-pub-9778250992563662/1847669238"); //zlaki.games@gmail.com - Ball Fall Top Banner
-		_adView.setAdSize(AdSize.BANNER);
+		if (isLite ()) {
+			_adView = new AdView(this);
+			_adView.setAdUnitId("ca-app-pub-9778250992563662/1847669238"); //zlaki.games@gmail.com - Ball Fall Top Banner
+			_adView.setAdSize(AdSize.BANNER);
 
-		AdRequest adRequest = new AdRequest.Builder()
-				.addTestDevice("54F567A97CA221C8AF6DC24725DD98A9")
-				.build();
-        _adView.loadAd(adRequest);
+			AdRequest adRequest = new AdRequest.Builder()
+					.addTestDevice("54F567A97CA221C8AF6DC24725DD98A9")
+					.build();
+			_adView.loadAd(adRequest);
+		}
 	}
 
 	@Override
 	protected void onPause() {
-		_adView.pause();
+		if (isLite ())
+			_adView.pause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		_adView.resume();
+		if (isLite ())
+			_adView.resume();
 	}
 
 	@Override
 	protected void onDestroy() {
-		_adView.destroy();
+		if (isLite ())
+			_adView.destroy();
 		super.onDestroy();
 	}
 
 	public void initAdMob () {
-		final GameAcitivity activity = this;
+		if (isLite ()) {
+			final GameAcitivity activity = this;
 
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (_adOverlay == null)
-					_adOverlay = createOverlay (activity, 320, 50, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
-			}
-		});
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					if (_adOverlay == null)
+						_adOverlay = createOverlay (activity, 320, 50, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
+				}
+			});
+		}
 	}
 
 	public void setTopLeftStyle(final float size, final float red, final float green, final float blue, final float alpha) {

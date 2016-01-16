@@ -101,6 +101,16 @@
     <!-- version-tag: 1 -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
 
+    <target name="-pre-build-rename-app" if="isliteversion=true">
+      <echo message="Rename app to lite version..." />
+      <replaceregexp
+        file="AndroidManifest.xml"
+        match='android:label="@string/app_name"'
+        replace='android:label="@string/app_name_lite"' />
+    </target>
+
+    <target name="-pre-build" depends="-pre-build-x86,-pre-build-arm,-pre-build-rename-app" />
+
     <target name="-pre-compile">
       <path id="project.all.jars.path">
         <path path="${toString:project.all.jars.path}"/>
@@ -108,5 +118,22 @@
           <include name="*.jar"/>
         </fileset>
       </path>
+    </target>
+
+    <target name="-post-build">
+      <taskdef name="xpath" classname="com.android.ant.XPathTask" classpathref="android.antlibs" />
+      <xpath input="AndroidManifest.xml" expression="/manifest/@package" output="manifest.package" />
+      <xpath input="AndroidManifest.xml" expression="/manifest/@android:versionCode" output="manifest.versionCode" />
+      <xpath input="AndroidManifest.xml" expression="/manifest/@android:versionName" output="manifest.versionName" />
+      
+      <echo message="Moving ${out.final.file} to package dir" />
+      <echo message="Package: ${manifest.package}" />
+      <echo message="Platform: ${custom.platform}" />
+      <echo message="Version code: ${manifest.versionCode}" />
+      <echo message="Version name: ${manifest.versionName}" />
+      <copy file="${out.final.file}"
+        tofile="../../../!package/${manifest.package}-${build.target}-${custom.platform}-${manifest.versionName}-${manifest.versionCode}.apk"
+        overwrite="true">
+      </copy>
     </target>
 </project>
