@@ -88,6 +88,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <AntPackage>
       <AndroidAppLibName>$(RootNamespace)</AndroidAppLibName>
+      <AntTarget>release</AntTarget>
     </AntPackage>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -108,6 +109,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <AntPackage>
       <AndroidAppLibName>$(RootNamespace)</AndroidAppLibName>
+      <AntTarget>release</AntTarget>
     </AntPackage>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -153,11 +155,14 @@
     <Content Include="assets\wow.ogg" />
     <Content Include="assets\yes.ogg" />
     <Content Include="assets\you-got-it.ogg" />
+    <Content Include="custom_rules.xml" />
     <Content Include="res\drawable\ic_launcher.png" />
     <Content Include="res\values\strings.xml" />
     <AntBuildXml Include="build.xml" />
     <AndroidManifest Include="AndroidManifest.xml" />
+    <AntProjectPropertiesFile Include="ant.properties" />
     <AntProjectPropertiesFile Include="project.properties" />
+    <Content Include="zlaki.games.keystore" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ballfallnative.Android.NativeActivity\ballfallnative.Android.NativeActivity.vcxproj">

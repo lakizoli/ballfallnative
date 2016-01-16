@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="$(projectname)" default="help">
 
+    <!-- As of JDK 7, the default signing algorithim has changed, requiring you to specify the signature and 
+	       digest algorithims  (-sigalg and -digestalg) when you sign an APK.-->
+	  <presetdef name="signjar">
+		  <signjar sigalg="MD5withRSA" digestalg="SHA1" />
+	  </presetdef>
+  
     <!-- The ant.properties file can be created by you. It is only edited by the
          'android' tool to add properties to it.
          This is the place to change some Ant specific build properties.
@@ -22,8 +28,24 @@
 
          -->
     <property file="ant.properties" />
+    <fail
+      message="key.store is missing. Make sure to have ant properties with signing info in project..."
+      unless="key.store"
+    />
+    <fail
+      message="key.alias is missing. Make sure to have ant properties with signing info in project..."
+      unless="key.alias"
+    />
+    <fail
+      message="key.alias.password is missing. Make sure to have ant properties with signing info in project..."
+      unless="key.alias.password"
+    />
+    <fail
+      message="key.store.passwor is missing. Make sure to have ant properties with signing info in project..."
+      unless="key.store.password"
+    />
 
-    <!-- if sdk.dir was not set from one of the property file, then
+  <!-- if sdk.dir was not set from one of the property file, then
          get it from the ANDROID_HOME env var. -->
     <property environment="env" />
     <condition property="sdk.dir" value="${env.ANDROID_HOME}">
