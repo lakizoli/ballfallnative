@@ -532,8 +532,8 @@ void FallScene::AddNewBalls (const LevelDefinition & level) {
 		Game& game = Game::Get ();
 		int addCount = 1; //_random.Next (1, level.maxAddCount + 1);
 		for (int i = 0; i < addCount; ++i) {
-			IContentManager& contentManager = Game::ContentManager ();
-			contentManager.PlaySound (_whooshSoundID, 1.0f, false);
+			//IContentManager& contentManager = Game::ContentManager ();
+			//contentManager.PlaySound (_whooshSoundID, 1.0f, false);
 
 			shared_ptr<Ball> ball;
 			switch (NextRandom (5)) {

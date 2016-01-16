@@ -153,6 +153,7 @@
     <Content Include="assets\wow.ogg" />
     <Content Include="assets\yes.ogg" />
     <Content Include="assets\you-got-it.ogg" />
+    <Content Include="res\drawable\ic_launcher.png" />
     <Content Include="res\values\strings.xml" />
     <AntBuildXml Include="build.xml" />
     <AndroidManifest Include="AndroidManifest.xml" />
