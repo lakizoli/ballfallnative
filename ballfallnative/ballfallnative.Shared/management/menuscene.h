@@ -20,6 +20,7 @@ private:
 	bool _startInPressedState;
 
 	int _clickSoundID;
+	int _okComeOnSoundID;
 
 //Construction
 public:

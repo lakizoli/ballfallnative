@@ -118,7 +118,7 @@
     <Content Include="assets\ball_magic.png" />
     <Content Include="assets\ball_red.png" />
     <Content Include="assets\ball_yellow.png" />
-    <Content Include="assets\beep1.ogg" />
+    <Content Include="assets\beep1x3.ogg" />
     <Content Include="assets\beep2.ogg" />
     <Content Include="assets\bomb.png" />
     <Content Include="assets\click.ogg" />
@@ -128,7 +128,12 @@
     <Content Include="assets\font.ttf" />
     <Content Include="assets\foreground.png" />
     <Content Include="assets\go.png" />
+    <Content Include="assets\maybe-next-time-huh.ogg" />
     <Content Include="assets\menu_background.png" />
+    <Content Include="assets\no-1.ogg" />
+    <Content Include="assets\no-2.ogg" />
+    <Content Include="assets\no-3.ogg" />
+    <Content Include="assets\okay-come-on.ogg" />
     <Content Include="assets\ready.png" />
     <Content Include="assets\score0.png" />
     <Content Include="assets\score1.png" />
@@ -142,8 +147,12 @@
     <Content Include="assets\score9.png" />
     <Content Include="assets\start_new_game.png" />
     <Content Include="assets\steady.png" />
+    <Content Include="assets\unbelievable.ogg" />
     <Content Include="assets\whistleblower.ogg" />
     <Content Include="assets\whoosh.ogg" />
+    <Content Include="assets\wow.ogg" />
+    <Content Include="assets\yes.ogg" />
+    <Content Include="assets\you-got-it.ogg" />
     <Content Include="res\values\strings.xml" />
     <AntBuildXml Include="build.xml" />
     <AndroidManifest Include="AndroidManifest.xml" />

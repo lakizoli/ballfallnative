@@ -43,6 +43,7 @@ void FallScene::Init (int width, int height) {
 	_ready->Start ();
 
 	_readyStart = true;
+	_noStart = -1;
 
 	_steady = nullptr;
 	_go = nullptr;
@@ -72,13 +73,17 @@ void FallScene::Init (int width, int height) {
 	contentManager.SetTopLeftStyle (20, 1, 0, 0, 1);
 	contentManager.SetTopRightStyle (20, 1, 0, 0, 1);
 
-	_readySoundID = contentManager.LoadSound ("beep1.ogg");
-	_steadySoundID = contentManager.LoadSound ("beep1.ogg");
-	_goSoundID = contentManager.LoadSound ("beep1.ogg");
+	_prepareSoundID = contentManager.LoadSound ("beep1x3.ogg");
 	_startSoundID = contentManager.LoadSound ("beep2.ogg");
-
 	_explosionSoundID = contentManager.LoadSound ("explosion.ogg");
 	_whooshSoundID = contentManager.LoadSound ("whoosh.ogg");
+	_no1SoundID = contentManager.LoadSound ("no-1.ogg");
+	_no2SoundID = contentManager.LoadSound ("no-2.ogg");
+	_no3SoundID = contentManager.LoadSound ("no-3.ogg");
+	_maybeNextTimeSoundID = contentManager.LoadSound ("maybe-next-time-huh.ogg");
+	_wowSoundID = contentManager.LoadSound ("wow.ogg");;
+	_yesSoundID = contentManager.LoadSound ("yes.ogg");
+	_youGotItSoundID = contentManager.LoadSound ("you-got-it.ogg");
 
 	contentManager.InitAdMob ();
 	RefreshOverlays (true);
@@ -89,13 +94,17 @@ void FallScene::Shutdown () {
 	contentManager.SetTopLeftStatus ("");
 	contentManager.SetTopRightStatus ("");
 
+	contentManager.UnloadSound (_youGotItSoundID);
+	contentManager.UnloadSound (_yesSoundID);
+	contentManager.UnloadSound (_wowSoundID);
+	contentManager.UnloadSound (_maybeNextTimeSoundID);
+	contentManager.UnloadSound (_no3SoundID);
+	contentManager.UnloadSound (_no2SoundID);
+	contentManager.UnloadSound (_no1SoundID);
 	contentManager.UnloadSound (_whooshSoundID);
 	contentManager.UnloadSound (_explosionSoundID);
-
 	contentManager.UnloadSound (_startSoundID);
-	contentManager.UnloadSound (_goSoundID);
-	contentManager.UnloadSound (_steadySoundID);
-	contentManager.UnloadSound (_readySoundID);
+	contentManager.UnloadSound (_prepareSoundID);
 
 	_touchedBalls.clear ();
 
@@ -156,6 +165,7 @@ void FallScene::Resize (int newWidth, int newHeight) {
 
 void FallScene::Update (float elapsedTime) {
 	Game& game = Game::Get ();
+	IContentManager& contentManager = Game::ContentManager ();
 
 	//Measure time
 	_fullTime += elapsedTime;
@@ -165,17 +175,12 @@ void FallScene::Update (float elapsedTime) {
 	if (_state == State::PreGame) {
 		if (_ready != nullptr) {
 			if (_readyStart) {
-				IContentManager& contentManager = Game::ContentManager (); 
-				contentManager.PlaySound (_readySoundID, 1.0f, false);
-
+				contentManager.PlaySound (_prepareSoundID, 1.0f, false);
 				_readyStart = false;
 			}
 
 			_ready->Update (elapsedTime);
 			if (_ready->IsEnded ()) {
-				IContentManager& contentManager = Game::ContentManager ();
-				contentManager.StopSound (_readySoundID);
-
 				_fullTime = 0;
 				_lastAddTime = 0;
 
@@ -185,17 +190,12 @@ void FallScene::Update (float elapsedTime) {
 				_steady.reset (new QTEGrowText ("steady.png", 0.75f));
 				_steady->Init ();
 				_steady->Start ();
-
-				contentManager.PlaySound (_steadySoundID, 1.0f, false);
 			}
 		}
 
 		if (_steady != nullptr) {
 			_steady->Update (elapsedTime);
 			if (_steady->IsEnded ()) {
-				IContentManager& contentManager = Game::ContentManager ();
-				contentManager.StopSound (_steadySoundID);
-
 				_fullTime = 0;
 				_lastAddTime = 0;
 
@@ -205,17 +205,12 @@ void FallScene::Update (float elapsedTime) {
 				_go.reset (new QTEGrowText ("go.png", 0.75f));
 				_go->Init ();
 				_go->Start ();
-
-				contentManager.PlaySound (_goSoundID, 1.0f, false);
 			}
 		}
 
 		if (_go != nullptr) {
 			_go->Update (elapsedTime);
 			if (_go->IsEnded ()) {
-				IContentManager& contentManager = Game::ContentManager ();
-				contentManager.StopSound (_goSoundID);
-
 				_fullTime = 0;
 				_lastAddTime = 0;
 
@@ -237,11 +232,9 @@ void FallScene::Update (float elapsedTime) {
 	//Pick next level
 	const LevelDefinition& curLevel = _levels[_currentLevel];
 
-	if (_fullTime > curLevel.endTime && _currentLevel < (int) _levels.size () - 1) {
+	if (_state == State::Game && _fullTime > curLevel.endTime && _currentLevel < (int) _levels.size () - 1) {
 		_currentLevel += 1;
 		RefreshOverlays (true);
-
-		IContentManager& contentManager = Game::ContentManager ();
 		contentManager.PlaySound (_startSoundID, 1.0f, false);
 	}
 
@@ -347,6 +340,12 @@ void FallScene::Update (float elapsedTime) {
 
 	if (_fail != nullptr)
 		_fail->Update (elapsedTime);
+
+	//Fail sound
+	if (_state == State::FallError && _noStart >= 0 && contentManager.IsSoundEnded (_noStart)) {
+		contentManager.PlaySound (_maybeNextTimeSoundID, 1.0f, false);
+		_noStart = -1;
+	}
 
 	//...
 }
@@ -647,6 +646,14 @@ void FallScene::HandleGoodRegionEnd (shared_ptr<Ball> ball) {
 
 	++_score;
 	RefreshOverlays (true);
+
+	IContentManager& contentManager = Game::ContentManager ();
+	switch (NextRandom (3)) {
+	default:
+	case 0: contentManager.PlaySound (_wowSoundID, 1.0f, false); break;
+	case 1: contentManager.PlaySound (_yesSoundID, 1.0f, false); break;
+	case 2: contentManager.PlaySound (_youGotItSoundID, 1.0f, false); break;
+	}
 }
 
 void FallScene::HandleWrongRegionEnd (shared_ptr<Ball> ball) {
@@ -682,6 +689,14 @@ void FallScene::HandleBallFallFailEnd () {
 	_fail.reset (new QTEGrowText ("fail.png", 0.1f));
 	_fail->Init ();
 	_fail->Start ();
+
+	IContentManager& contentManager = Game::ContentManager ();
+	switch (NextRandom (3)) {
+	default:
+	case 0: contentManager.PlaySound (_no1SoundID, 1.0f, false); _noStart = _no1SoundID; break;
+	case 1: contentManager.PlaySound (_no2SoundID, 1.0f, false); _noStart = _no2SoundID; break;
+	case 2: contentManager.PlaySound (_no3SoundID, 1.0f, false); _noStart = _no3SoundID; break;
+	}
 }
 
 void FallScene::RefreshOverlays (bool force) {

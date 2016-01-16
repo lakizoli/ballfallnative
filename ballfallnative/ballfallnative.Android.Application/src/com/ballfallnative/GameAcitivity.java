@@ -66,7 +66,7 @@ public class GameAcitivity extends NativeActivity {
 
 		//Setup adMob overlay
 		_adView = new AdView(this);
-		_adView.setAdUnitId("ca-app-pub-5492739363747274/1590233145");
+		_adView.setAdUnitId("ca-app-pub-9778250992563662/1847669238"); //zlaki.games@gmail.com - Ball Fall Top Banner
 		_adView.setAdSize(AdSize.BANNER);
 
 		AdRequest adRequest = new AdRequest.Builder()

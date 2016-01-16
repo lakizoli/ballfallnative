@@ -7,19 +7,20 @@
 
 //Játék öletek:
 //1.) ballfall: leesõ labdák válogatása különbözõ színû csövekbe (vagy allatok etetese)
-//1b.) labdás játék: olyan, mint a várfal védelem, csak itt az a játék, hogy meg kell akadályozni, hogy rossz színû labda menjen le egy adott színû csõben. Ki kell lukasztani a rossz színû bubikat.
-//1c.) ugyanaz, mint elõbb, csak lufik, és felfelé szállnak. Ki kell lukasztani a rossz színû csõbe menõ lufikat...
-//1d.) Varázsképek matek játék (zolcsi matekházija, szórzótábla)
-//2.) dekázo játék: egy labdát kell dekázni mindenféle szélben, esõben, ill. különbözõ skill-ek gesture függõen stb...
-//3.) trojan horse (nintendo handheld)
-//4.) varfal védelem (nintendo handheld)
-//5.) krakout, traz (C64) (krakout már van android-ra, és szép is sajnos...) TRAZ még nincs...
-//5b.) Ugyanaz a bontogatós játék, de úgy, hogy a labdát a fallal kell ütögetni. Tehát a telefon mozgatásával lehet a labdát mindenfelé ütögetni, irányítani... :)
-//6.) hunch back (C64) (Már van egy régi átirat, de szerintem én jobbat fogok csinálni..., viszont iOS-en van egy nagyon király :( )
-//7.) pörgõ leveleken ugráló béka
-//8.) Aknakeresõ különbözõ alakú pályákkal... (be kellene már fejezni)
-//9.) Tangoes játék (fajáték)
-//10.) snapszer
+//2.) labdás játék: olyan, mint a várfal védelem, csak itt az a játék, hogy meg kell akadályozni, hogy rossz színû labda menjen le egy adott színû csõben. Ki kell lukasztani a rossz színû bubikat.
+//3.) ugyanaz, mint elõbb, csak lufik, és felfelé szállnak. Ki kell lukasztani a rossz színû csõbe menõ lufikat...
+//4.) A régi macskás fizikai (robbantós) játék mintájára, legyen egy olyan játék, ahol bombák lerakásával lehet pályákat lebontani. Az a cél, hogy minden "macska", csillag akármi leessen, vagy felrobbanjon meghatározott számú bombából...
+//5.) Varázsképek matek játék (zolcsi matekházija, szórzótábla)
+//6.) dekázo játék: egy labdát kell dekázni mindenféle szélben, esõben, ill. különbözõ skill-ek gesture függõen stb...
+//7.) trojan horse (nintendo handheld)
+//8.) varfal védelem (nintendo handheld)
+//9.) krakout, traz (C64) (krakout már van android-ra, és szép is sajnos...) TRAZ még nincs...
+//9b.) Ugyanaz a bontogatós játék, de úgy, hogy a labdát a fallal kell ütögetni. Tehát a telefon mozgatásával lehet a labdát mindenfelé ütögetni, irányítani... :)
+//10.) hunch back (C64) (Már van egy régi átirat, de szerintem én jobbat fogok csinálni..., viszont iOS-en van egy nagyon király :( )
+//11.) pörgõ leveleken ugráló béka
+//12.) Aknakeresõ különbözõ alakú pályákkal... (be kellene már fejezni)
+//13.) Tangoes játék (fajáték)
+//14.) snapszer
 
 /// Base class of the game.
 class Game {

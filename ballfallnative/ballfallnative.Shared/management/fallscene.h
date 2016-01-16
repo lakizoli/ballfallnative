@@ -67,12 +67,18 @@ private:
 	shared_ptr<QTEGrowText> _go;
 
 	bool _readyStart;
-	int _readySoundID;
-	int _steadySoundID;
-	int _goSoundID;
+	int _noStart;
+	int _prepareSoundID;
 	int _startSoundID;
 	int _explosionSoundID;
 	int _whooshSoundID;
+	int _no1SoundID;
+	int _no2SoundID;
+	int _no3SoundID;
+	int _maybeNextTimeSoundID;
+	int _wowSoundID;
+	int _yesSoundID;
+	int _youGotItSoundID;
 
 	vector<shared_ptr<FallingBall>> _fallingBalls;
 	vector<shared_ptr<QTEGoodBall>> _endedBalls;

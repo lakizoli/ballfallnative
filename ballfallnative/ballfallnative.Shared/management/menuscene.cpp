@@ -52,14 +52,20 @@ void MenuScene::Init (int width, int height) {
 
 	IContentManager& contentManager = Game::ContentManager ();
 	_clickSoundID = contentManager.LoadSound ("click.ogg");
+	_okComeOnSoundID = contentManager.LoadSound ("okay-come-on.ogg");
 
 	contentManager.InitAdMob ();
 }
 
 void MenuScene::Shutdown () {
 	IContentManager& contentManager = Game::ContentManager ();
+	contentManager.StopSound (_okComeOnSoundID);
 	contentManager.StopSound (_clickSoundID);
+
+	contentManager.UnloadSound (_okComeOnSoundID);
 	contentManager.UnloadSound (_clickSoundID);
+
+	_okComeOnSoundID = 0;
 	_clickSoundID = 0;
 
 	_startPressed = false;
