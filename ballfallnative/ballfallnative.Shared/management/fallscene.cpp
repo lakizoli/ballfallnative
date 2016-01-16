@@ -676,6 +676,9 @@ void FallScene::HandleBombBlowEnd (shared_ptr<Ball> ball) {
 }
 
 void FallScene::HandleBallFallFailEnd () {
+	if (_state == State::FallError)
+		return;
+
 	_state = State::FallError;
 
 	for (shared_ptr<FallingBall> item : _fallingBalls)
