@@ -33,6 +33,9 @@ private:
 	int mWidth;
 	int mHeight;
 
+	int mRefWidth;
+	int mRefHeight;
+
 	shared_ptr<Scene> mCurrentScene;
 
 //Construction
@@ -61,7 +64,7 @@ public:
 
 //Management interface
 public:
-	virtual void Init (int width, int height);
+	virtual void Init (int width, int height, int refWidth, int refHeight);
 	virtual void Shutdown ();
 
 	void Resize (int newWidth, int newHeight);
@@ -95,6 +98,14 @@ public:
 
 	float ScreenHeight () const {
 		return ToLocal (0, mHeight).y;
+	}
+
+	float WidthRatio () const {
+		return (float) mWidth / (float) mRefWidth;
+	}
+
+	float HeightRatio () const {
+		return (float) mHeight / (float) mRefHeight;
 	}
 
 	Vector2D ToLocal (float x, float y) const;

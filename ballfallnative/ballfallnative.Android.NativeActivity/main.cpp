@@ -145,7 +145,7 @@ static int engine_init_display(struct engine* engine) {
 
 	if (!engine->game) {
 		engine->game.reset(new BallFallGame (*(engine->util), *(engine->contentManager)));
-		engine->game->Init (w, h);
+		engine->game->Init (w, h, 1920, 1080);
 
 		engine->animating = 1;
 	}

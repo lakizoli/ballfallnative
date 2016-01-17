@@ -33,10 +33,13 @@ void FallScene::Init (int width, int height) {
 	_fullTime = 0;
 	_lastAddTime = 0;
 
-	_yellowRegion = Rect2D (game.ToLocal (-2000, 65 * 4), game.ToLocal (20 * 4, 270 * 4));
-	_greenRegion = Rect2D (game.ToLocal (-2000, 270 * 4), game.ToLocal (20 * 4, 480 * 4 + 2000));
-	_redRegion = Rect2D (game.ToLocal (width - 20 * 4, 65 * 4), game.ToLocal (width + 2000, 270 * 4));
-	_blueRegion = Rect2D (game.ToLocal (width - 20 * 4, 270 * 4), game.ToLocal (width + 2000, 480 * 4 + 2000));
+	float widthRatio = game.WidthRatio ();
+	float heightRatio = game.HeightRatio ();
+
+	_yellowRegion = Rect2D (game.ToLocal (-2000, 65 * 4 * heightRatio), game.ToLocal (20 * 4 * widthRatio, 270 * 4 * heightRatio));
+	_greenRegion = Rect2D (game.ToLocal (-2000, 270 * 4 * heightRatio), game.ToLocal (20 * 4 * widthRatio, 480 * 4 * heightRatio + 2000));
+	_redRegion = Rect2D (game.ToLocal (width - 20 * 4 * widthRatio, 65 * 4 * heightRatio), game.ToLocal (width + 2000, 270 * 4 * heightRatio));
+	_blueRegion = Rect2D (game.ToLocal (width - 20 * 4 * widthRatio, 270 * 4 * heightRatio), game.ToLocal (width + 2000, 480 * 4 * heightRatio + 2000));
 
 	_ready.reset (new QTEGrowText ("ready.png", 0.75f));
 	_ready->Init ();
@@ -256,7 +259,7 @@ void FallScene::Update (float elapsedTime) {
 
 		if (item->body->CollideBody != nullptr) { //If this item collide with other item
 			shared_ptr<Ball> collideBall = dynamic_pointer_cast<Ball, Mesh2D> (item->body->CollideBody->Mesh);
-			if (collideBall != nullptr && collideBall->Type () == Ball::Color::Bomb) { //Handle collision with bomb
+			if (collideBall != nullptr && (collideBall->Type () == Ball::Color::Bomb && item->ball->Type () != Ball::Color::Bomb)) { //Handle collision with bomb
 				_fallingBalls.erase (_fallingBalls.begin () + i);
 				HandleBombBlowEnd (collideBall);
 				continue;

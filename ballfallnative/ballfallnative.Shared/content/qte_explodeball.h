@@ -23,6 +23,7 @@ public:
 		QTE::Init ();
 		_explosion.Init ();
 		_explosion.Scale = Vector2D (0.2f, 0.2f);
+		_explosion.Pos = _ball->Pos;
 	}
 
 	virtual void Shutdown () override {
@@ -46,7 +47,7 @@ protected:
 		QTE::OnUpdate (elapsedTime);
 		_frame.Update (elapsedTime);
 		_explosion.Rotation = (_frame.Frame () % 4) * 90.0f;
-		_explosion.Pos = _ball->Pos;
+		_ball->Pos = _explosion.Pos;
 	}
 
 	virtual void OnRender () override {

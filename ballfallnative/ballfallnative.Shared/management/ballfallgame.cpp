@@ -34,8 +34,8 @@ BallFallGame::BallFallGame (IUtil & util, IContentManager & contentManager) :
 	_musicID (0) {
 }
 
-void BallFallGame::Init (int width, int height) {
-	Game::Init (width, height);
+void BallFallGame::Init (int width, int height, int refWidth, int refHeight) {
+	Game::Init (width, height, refWidth, refHeight);
 	ReadGameState ();
 
 	IContentManager& contentManager = Game::ContentManager ();

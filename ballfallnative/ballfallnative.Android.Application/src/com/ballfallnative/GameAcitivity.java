@@ -107,8 +107,13 @@ public class GameAcitivity extends NativeActivity {
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					if (_adOverlay == null)
-						_adOverlay = createOverlay (activity, 320, 50, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
+					if (_adOverlay == null) {
+						if (isTablet()) { //Tablet
+							_adOverlay = createOverlay (activity, 468, 60, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
+						} else { //Phone
+							_adOverlay = createOverlay (activity, 320, 50, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
+						}
+					}
 				}
 			});
 		}
@@ -255,4 +260,8 @@ public class GameAcitivity extends NativeActivity {
 		float px = dp * (metrics.densityDpi / (float)DisplayMetrics.DENSITY_DEFAULT);
 		return Math.round(px);
 	}
+
+	private boolean isTablet() {
+        return (getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
 }
