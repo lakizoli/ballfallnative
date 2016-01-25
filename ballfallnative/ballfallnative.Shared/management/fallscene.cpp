@@ -16,11 +16,11 @@ void FallScene::Init (int width, int height) {
 	_levels.push_back (LevelDefinition ({ 4, 150.0f,  700, 1100, 1.1f, 1 }));
 	_levels.push_back (LevelDefinition ({ 5, 180.0f,  650, 1100, 1.2f, 1 }));
 	_levels.push_back (LevelDefinition ({ 6, 210.0f,  600, 1000, 1.3f, 1 }));
-	_levels.push_back (LevelDefinition ({ 7, 240.0f,  600, 1000, 1.4f, 1 }));
-	_levels.push_back (LevelDefinition ({ 8, 270.0f,  600, 1000, 1.5f, 1 }));
-	_levels.push_back (LevelDefinition ({ 9, 300.0f,  600, 1000, 1.6f, 1 }));
+	_levels.push_back (LevelDefinition ({ 7, 240.0f,  550,  900, 1.4f, 1 }));
+	_levels.push_back (LevelDefinition ({ 8, 270.0f,  500,  850, 1.5f, 1 }));
+	_levels.push_back (LevelDefinition ({ 9, 300.0f,  500,  800, 1.5f, 1 }));
 	for (int i = 10; i < 100; ++i) {
-		_levels.push_back (LevelDefinition ({ i, 300.0f + i * 30.0f,  600, 1000, 1.6f, 1 }));
+		_levels.push_back (LevelDefinition ({ i, 300.0f + i * 30.0f,  500,  800, 1.5f, 1 }));
 	}
 
 	_currentLevel = 0;

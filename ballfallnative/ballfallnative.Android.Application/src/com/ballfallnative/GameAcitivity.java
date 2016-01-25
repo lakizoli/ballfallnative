@@ -70,10 +70,15 @@ public class GameAcitivity extends NativeActivity {
 		if (isLite ()) {
 			_adView = new AdView(this);
 			_adView.setAdUnitId("ca-app-pub-9778250992563662/1847669238"); //zlaki.games@gmail.com - Ball Fall Top Banner
-			_adView.setAdSize(AdSize.BANNER);
+			if (isTablet()) {
+				_adView.setAdSize(AdSize.LEADERBOARD);
+			} else {
+				_adView.setAdSize(AdSize.BANNER);
+			}
 
 			AdRequest adRequest = new AdRequest.Builder()
-					.addTestDevice("54F567A97CA221C8AF6DC24725DD98A9")
+					//.addTestDevice("54F567A97CA221C8AF6DC24725DD98A9") //Nexus 6 phone
+					//.addTestDevice("657B606D88C7789A95533151364832AC") //Nexus 9 tablet
 					.build();
 			_adView.loadAd(adRequest);
 		}
@@ -109,9 +114,9 @@ public class GameAcitivity extends NativeActivity {
 				public void run() {
 					if (_adOverlay == null) {
 						if (isTablet()) { //Tablet
-							_adOverlay = createOverlay (activity, 468, 60, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
+							_adOverlay = createADOverlay (activity, 728, 90, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
 						} else { //Phone
-							_adOverlay = createOverlay (activity, 320, 50, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
+							_adOverlay = createADOverlay (activity, 320, 50, 0, 0, _adView, Gravity.TOP, -5, -5, -5, -5);
 						}
 					}
 				}
@@ -126,7 +131,7 @@ public class GameAcitivity extends NativeActivity {
 			@Override
 			public void run() {
 				if (_topLeftOverlay == null)
-					_topLeftOverlay = createOverlay (activity, 320, 50, 0, 55, _textTopLeft, Gravity.TOP | Gravity.LEFT, 5, 0, 5, 0);
+					_topLeftOverlay = createOverlay (activity, 320, 50, 0, isTablet() ? 95 : 55, _textTopLeft, Gravity.TOP | Gravity.LEFT, 5, 0, 5, 0);
 
 				_textTopLeft.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
 
@@ -146,7 +151,7 @@ public class GameAcitivity extends NativeActivity {
 			@Override
 			public void run() {
 				if (_topRightOverlay == null)
-					_topRightOverlay = createOverlay (activity, 320, 50, 0, 55, _textTopRight, Gravity.TOP | Gravity.RIGHT, 5, 0, 5, 0);
+					_topRightOverlay = createOverlay (activity, 320, 50, 0, isTablet() ? 95 : 55, _textTopRight, Gravity.TOP | Gravity.RIGHT, 5, 0, 5, 0);
 
 				_textTopRight.setTextSize(TypedValue.COMPLEX_UNIT_DIP, size);
 
@@ -222,6 +227,38 @@ public class GameAcitivity extends NativeActivity {
 			}
 		}
 	}
+	
+	private PopupWindow createADOverlay (Context context, int width, int height, int offsetX, int offsetY, View overlayView, int gravity, int padLeft, int padTop, int padRight, int padBottom) {
+		PopupWindow popUp = new PopupWindow(context);
+
+		//DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        //float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        //float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+		popUp.setWidth(width);
+		popUp.setHeight(height);
+		popUp.setWindowLayoutMode(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		popUp.setClippingEnabled(false);
+
+		RelativeLayout layout = new RelativeLayout(context);
+		//layout.setOrientation(LinearLayout.VERTICAL);
+		layout.setPadding(padLeft, padTop, padRight, padBottom);
+
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		params.setMargins(0, 0, 0, 0);
+		params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+		layout.addView(overlayView, params);
+
+		popUp.setContentView(layout);
+
+		popUp.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+		//popUp.setBackgroundDrawable(new ColorDrawable(Color.YELLOW));
+
+		popUp.showAtLocation(_mainLayout, gravity, convertDpToPixel (offsetX), convertDpToPixel (offsetY));
+		popUp.update();
+
+		return popUp;
+	}
 
 	private PopupWindow createOverlay (Context context, int width, int height, int offsetX, int offsetY, View overlayView, int gravity, int padLeft, int padTop, int padRight, int padBottom) {
 		PopupWindow popUp = new PopupWindow(context);
@@ -242,6 +279,7 @@ public class GameAcitivity extends NativeActivity {
 		popUp.setContentView(layout);
 
 		popUp.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+		//popUp.setBackgroundDrawable(new ColorDrawable(Color.YELLOW));
 
 		popUp.showAtLocation(_mainLayout, gravity, convertDpToPixel (offsetX), convertDpToPixel (offsetY));
 		popUp.update();
